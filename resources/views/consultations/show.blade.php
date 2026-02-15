@@ -39,6 +39,13 @@
                 </div>
             </div>
         </div>
+        
+        <div class="bg-white p-5 rounded-lg shadow mb-6">
+            <h3 class="font-bold text-gray-700 mb-2">Chief Complaint</h3>
+            <p class="text-gray-600 bg-gray-50 p-3 rounded italic">
+                "{{ $consultation->complaint_text ?? 'No complaint recorded' }}"
+            </p>
+        </div>
     </div>
 
     <div class="md:col-span-2 space-y-6">

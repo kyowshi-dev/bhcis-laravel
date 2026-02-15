@@ -37,7 +37,8 @@ class ConsultationController extends Controller
                 'worker_id' => 1, // Hardcoded for now
                 'status' => 'pending_doctor',
                 'nature_of_visit' => $request->nature_of_visit,
-                'chief_complaint_id' => null, // Simplified for now
+                'chief_complaint_id' => null, 
+                'complaint_text' => $request->chief_complaint,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
