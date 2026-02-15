@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
 
     <div class="md:col-span-1 space-y-6">
         
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">{{ $patient->last_name }}, {{ $patient->first_name }}</h2>
-            <p class="text-sm text-gray-500 mb-4">Patient ID: {{ $patient->id }}</p>
+            <p class="text-sm text-gray-500 mb-4">Patient ID: {{ str_pad($patient->id, 6, '0', STR_PAD_LEFT) }}</p>
             <div class="text-sm space-y-2">
                 <div class="flex justify-between"><span>Sex:</span> <span class="font-medium">{{ $patient->sex }}</span></div>
                 <div class="flex justify-between"><span>Age:</span> <span class="font-medium">{{ \Carbon\Carbon::parse($patient->date_of_birth)->age }} y/o</span></div>
@@ -34,8 +34,8 @@
                     <span class="font-bold text-lg text-gray-700">{{ $vitals->weight_kg ?? '--' }} kg</span>
                 </div>
                 <div>
-                    <span class="text-blue-500 block text-xs uppercase">BMI</span>
-                    <span class="font-bold text-lg text-gray-700">{{ $vitals->bmi ?? '--' }}</span>
+                    <span class="text-blue-500 block text-xs uppercase">Height</span>
+                    <span class="font-bold text-lg text-gray-700">{{ $vitals->height_cm ?? '--' }} cm</span>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">🩺 Medical Diagnosis</h3>
 
-            @if($diagnoses->count() > 0)
+            @if(isset($diagnoses) && $diagnoses->count() > 0)
                 <div class="mb-6 space-y-2">
                     @foreach($diagnoses as $d)
                         <div class="flex justify-between items-center bg-green-50 p-3 rounded border border-green-100">
@@ -80,7 +80,6 @@
                         class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 outline-none"
                         autocomplete="off"
                     >
-
                     <input type="hidden" name="diagnosis_id" x-model="selectedId">
 
                     <div x-show="results.length > 0" class="absolute z-10 w-full bg-white mt-1 border border-gray-200 rounded shadow-xl max-h-60 overflow-y-auto" style="display: none;">
@@ -102,7 +101,12 @@
                 <div class="text-right">
                     <button type="submit" :disabled="!selectedId" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold disabled:opacity-50">
                         Add Diagnosis
-			<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mt-6">
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">💊 Prescription (Rx)</h3>
 
             @if(isset($prescriptions) && $prescriptions->count() > 0)
@@ -149,6 +153,7 @@
                                 <template x-for="item in results" :key="item.id">
                                     <li @click="select(item)" class="p-2 hover:bg-green-50 cursor-pointer border-b text-sm">
                                         <span class="font-bold text-gray-800" x-text="item.text"></span>
+                                        <span class="block text-xs text-gray-400 truncate" x-text="item.desc"></span>
                                     </li>
                                 </template>
                             </ul>
@@ -181,25 +186,51 @@
             </form>
         </div>
 
-        <script>
-            function medicineSearch() {
-                return {
-                    query: '',
-                    results: [],
-                    selectedId: null,
+    </div>
+</div>
 
-                    async search() {
-                        if (this.query.length < 2) return;
-                        let response = await fetch(`/search/medicines?query=${this.query}`);
-                        this.results = await response.json();
-                    },
+<script>
+    // 1. Diagnosis Search Component
+    function diagnosisSearch() {
+        return {
+            query: '',
+            results: [],
+            selectedId: null,
 
-                    select(item) {
-                        this.query = item.text;
-                        this.selectedId = item.id;
-                        this.results = [];
-                    }
-                }
+            async search() {
+                if (this.query.length < 2) return;
+                // Calls your SearchController
+                let response = await fetch(`/search/diagnoses?query=${this.query}`);
+                this.results = await response.json();
+            },
+
+            select(item) {
+                this.query = item.text;
+                this.selectedId = item.id;
+                this.results = [];
             }
-   	</script>
+        }
+    }
+
+    // 2. Medicine Search Component
+    function medicineSearch() {
+        return {
+            query: '',
+            results: [],
+            selectedId: null,
+
+            async search() {
+                if (this.query.length < 2) return;
+                let response = await fetch(`/search/medicines?query=${this.query}`);
+                this.results = await response.json();
+            },
+
+            select(item) {
+                this.query = item.text;
+                this.selectedId = item.id;
+                this.results = [];
+            }
+        }
+    }
+</script>
 @endsection

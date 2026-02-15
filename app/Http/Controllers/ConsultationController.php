@@ -62,37 +62,45 @@ class ConsultationController extends Controller
 
     // 3. Show the Doctor's Workspace (View Consultation)
 	public function show($id)
-    	{
-        	$consultation = DB::table('consultations')->find($id);
-        
-        	if (!$consultation) {
-            		abort(404, 'Consultation not found');
-        		}
+{
+    $consultation = DB::table('consultations')->find($id);
 
-        $patient = DB::table('patients')->find($consultation->patient_id);
-        $vitals = DB::table('vitals')->where('consultation_id', $id)->first();
-        
-        // Fetch Diagnoses
-        $diagnoses = DB::table('diagnosis_records')
-            ->join('diagnosis_lookup', 'diagnosis_records.diagnosis_id', '=', 'diagnosis_lookup.id')
-            ->where('consultation_id', $id)
-            ->select('diagnosis_records.*', 'diagnosis_lookup.diagnosis_name', 'diagnosis_lookup.diagnosis_code')
-            ->get();
-
-        // Fetch Prescriptions (NEW)
-        // Fetch Prescriptions (Fixed)
-        $prescriptions = DB::table('prescriptions')
-            ->join('medicines_lookup', 'prescriptions.medicine_id', '=', 'medicines_lookup.id')
-            ->where('prescriptions.consultation_id', $id) // <--- Added 'prescriptions.' to be specific
-            ->select(
-                'prescriptions.*', 
-                'medicines_lookup.medicine_name' 
-                // Removed 'medicines_lookup.category' to avoid crashes
-            )
-            ->get();
-
-        return view('consultations.show', compact('consultation', 'patient', 'vitals', 'diagnoses', 'prescriptions'));
+    if (!$consultation) {
+        abort(404, 'Consultation not found');
     }
+
+    $patient = DB::table('patients')->find($consultation->patient_id);
+    
+    // 1. Fetch the Consultation Data
+    $vitals = DB::table('vitals')->where('consultation_id', $id)->first();
+    
+    // 2. Fetch Existing Records (History)
+    $existingDiagnoses = DB::table('diagnosis_records')
+        ->join('diagnosis_lookup', 'diagnosis_records.diagnosis_id', '=', 'diagnosis_lookup.id')
+        ->where('consultation_id', $id)
+        ->select('diagnosis_records.*', 'diagnosis_lookup.diagnosis_name', 'diagnosis_lookup.diagnosis_code')
+        ->get();
+
+    $existingPrescriptions = DB::table('prescriptions')
+        ->join('medicines_lookup', 'prescriptions.medicine_id', '=', 'medicines_lookup.id')
+        ->where('prescriptions.consultation_id', $id)
+        ->select('prescriptions.*', 'medicines_lookup.medicine_name')
+        ->get();
+
+    // 3. NEW: Fetch Dropdown Options (The "Menu" for the Doctor)
+    $diagnosisOptions = DB::table('diagnosis_lookup')->orderBy('diagnosis_name')->get();
+    $medicineOptions = DB::table('medicines_lookup')->orderBy('medicine_name')->get();
+
+    return view('consultations.show', compact(
+        'consultation', 
+        'patient', 
+        'vitals', 
+        'existingDiagnoses', 
+        'existingPrescriptions',
+        'diagnosisOptions', // <--- Pass these to the view
+        'medicineOptions'   // <--- Pass these to the view
+    ));
+}
 
     // 4. Save a Diagnosis (Doctor's Action)
     public function addDiagnosis(Request $request, $id)
