@@ -14,10 +14,15 @@
             <a href="{{ url('/') }}" class="text-xl font-bold flex items-center gap-2">
                 🏥 BHCIS <span class="text-xs bg-green-800 px-2 py-1 rounded">Sta. Ana</span>
             </a>
-            <div class="space-x-4 text-sm">
+            <div class="space-x-4 text-sm flex items-center">
                 <a href="{{ url('/patients') }}" class="hover:text-green-200">Patients</a>
                 <a href="{{ url('/consultations') }}" class="hover:text-green-200">Consultations</a>
-                <a href="#" class="hover:text-green-200">Login</a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="text-green-100 hover:text-white hover:bg-green-800 px-3 py-2 rounded-md text-sm font-medium">
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
