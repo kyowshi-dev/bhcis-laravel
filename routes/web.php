@@ -3,22 +3,29 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ConsultationController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
 use App\Http\Controllers\SearchController;
 
-// Search Endpoints (API)
+// --- 1. SEARCH API (Keep these at the top) ---
 Route::get('/search/patients', [SearchController::class, 'patients'])->name('search.patients');
 Route::get('/search/diagnoses', [SearchController::class, 'diagnoses'])->name('search.diagnoses');
 Route::get('/search/medicines', [SearchController::class, 'medicines'])->name('search.medicines');
-Route::view('/patients', 'patients.index');
-Route::view('/', 'patients.index'); // Make it the homepage for now
+
+// --- 2. PATIENT MANAGEMENT ---
+
+// Homepage & List (Uses Controller to load data)
+Route::get('/', [PatientController::class, 'index']); 
+Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
+
+// Create Patient (MUST be before the {id} wildcard)
+Route::get('/patients/create', [PatientController::class, 'create'])->name('patients.create');
+Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
+
+// Show Profile (Wildcard - catches IDs like 1, 2, 100)
 Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patients.show');
 
-// Consultation Routes
+// --- 3. CONSULTATION MODULE ---
+
+// Triage (Admission)
 Route::get('/patients/{id}/consultations/create', [ConsultationController::class, 'create'])->name('consultations.create');
 Route::post('/patients/{id}/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
 
