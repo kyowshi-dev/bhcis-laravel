@@ -115,7 +115,7 @@ class PatientController extends Controller
         }
 
         // 2. Calculate Age
-        $patient->age = \Carbon\Carbon::parse($patient->date_of_birth)->age;
+        $patient->age = Carbon::parse($patient->date_of_birth)->age;
 
         // 3. Load Consultations (History)
         $history = DB::table('consultations')
