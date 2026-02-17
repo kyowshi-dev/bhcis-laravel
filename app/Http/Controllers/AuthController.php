@@ -12,7 +12,7 @@ class AuthController extends Controller
     {
         // If user is already logged in, send them to the dashboard (or patients list)
         if (Auth::check()) {
-            return redirect()->route('patients.index');
+            return redirect()->route('dashboard');
         }
 
         return view('auth.login');
@@ -38,8 +38,8 @@ class AuthController extends Controller
 
             // 4. Redirect User
             // 'intended' sends them to the URL they tried to visit before being intercepted by login
-            // Default fallback is 'patients.index'
-            return redirect()->intended(route('patients.index'));
+            // Default fallback is 'dashboard'
+            return redirect()->intended(route('dashboard'));
         }
 
         // 5. If Login Fails...
