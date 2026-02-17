@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         // 6. ZONES (Barangay Sta. Ana Specific)
         $zones = [];
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 8; $i++) {
             $zones[] = ['zone_number' => "Zone $i"];
         }
         DB::table('zones')->insertOrIgnore($zones);

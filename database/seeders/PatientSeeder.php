@@ -23,7 +23,7 @@ class PatientSeeder extends Seeder
             
             // 1. Create a Household First (Required by database schema)
             $householdId = DB::table('households')->insertGetId([
-                'zone_id' => rand(1, 10), // Random Zone 1-10
+                'zone_id' => rand(1, 8), // Random Zone 1-8 (since we only have 8 zones)
                 'family_name_head' => $lastNames[array_rand($lastNames)],
                 'contact_number' => '09' . rand(100000000, 999999999),
                 'created_at' => now(),

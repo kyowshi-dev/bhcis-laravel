@@ -122,7 +122,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs uppercase text-gray-500 font-bold mb-1">Education</label>
+                    <label class="block text-xs uppercase text-gray-500 font-bold mb-1">Highest Educational Attainment</label>
                     <select name="educational_attainment" class="w-full p-2 border rounded">
                         <option value="">Select Level</option>
                         @foreach(['None', 'Elementary', 'High School', 'College', 'Vocational'] as $edu)
@@ -133,7 +133,7 @@
                 <div>
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">Employment</label>
                     <input type="text" name="employment_status" value="{{ old('employment_status') }}" 
-                           placeholder="e.g. Farmer, Driver" class="w-full p-2 border rounded">
+                           placeholder="None If Unemployed" class="w-full p-2 border rounded">
                 </div>
             </div>
 
