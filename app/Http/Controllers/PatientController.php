@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class PatientController extends Controller
 {
@@ -13,7 +13,22 @@ class PatientController extends Controller
     {
         $patients = DB::table('patients')
             ->join('households', 'patients.household_id', '=', 'households.id')
-            ->select('patients.*', 'households.family_name_head', 'households.zone_id')
+            ->leftJoinSub(
+                DB::table('consultations')
+                    ->select('patient_id', DB::raw('MAX(created_at) as last_visit'))
+                    ->groupBy('patient_id'),
+                'latest_consultations',
+                function ($join) {
+                    $join->on('patients.id', '=', 'latest_consultations.patient_id');
+                }
+            )
+            ->select(
+                'patients.*',
+                'households.family_name_head',
+                'households.zone_id',
+                'households.contact_number',
+                'latest_consultations.last_visit'
+            )
             ->orderByDesc('patients.created_at')
             ->get();
 
@@ -38,17 +53,17 @@ class PatientController extends Controller
         // --- 1. ENHANCED VALIDATION ---
         $validated = $request->validate([
             'household_id' => 'required|exists:households,id', // Still required for now
-            
+
             // Name: Only letters, spaces, dots, and dashes. No numbers.
             'first_name' => ['required', 'string', 'min:2', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
-            'last_name'  => ['required', 'string', 'min:2', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
-            'middle_name'=> ['nullable', 'string', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
-            
+            'last_name' => ['required', 'string', 'min:2', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
+            'middle_name' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
+
             'sex' => 'required|in:Male,Female',
-            
+
             // Birthdate: Must be a valid date and NOT in the future
             'date_of_birth' => 'required|date|before:today',
-            
+
             'civil_status' => 'required|in:Single,Married,Widowed,Separated,Common Law',
             'blood_type' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
             'educational_attainment' => 'nullable|string',
@@ -78,9 +93,9 @@ class PatientController extends Controller
             'household_id' => $request->household_id,
             // Auto-Capitalize Names
             'first_name' => ucwords(strtolower($request->first_name)),
-            'last_name'  => ucwords(strtolower($request->last_name)),
-            'middle_name'=> $request->middle_name ? ucwords(strtolower($request->middle_name)) : null,
-            
+            'last_name' => ucwords(strtolower($request->last_name)),
+            'middle_name' => $request->middle_name ? ucwords(strtolower($request->middle_name)) : null,
+
             'suffix' => $request->suffix,
             'sex' => $request->sex,
             'date_of_birth' => $request->date_of_birth,
@@ -89,10 +104,10 @@ class PatientController extends Controller
             'civil_status' => $request->civil_status,
             'educational_attainment' => $request->educational_attainment,
             'employment_status' => $request->employment_status,
-            
+
             'has_4ps' => $request->has('has_4ps') ? 1 : 0,
             'has_nhts' => $request->has('has_nhts') ? 1 : 0,
-            
+
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -110,7 +125,7 @@ class PatientController extends Controller
             ->select('patients.*', 'households.family_name_head', 'households.zone_id')
             ->first();
 
-        if (!$patient) {
+        if (! $patient) {
             abort(404, 'Patient not found');
         }
 
