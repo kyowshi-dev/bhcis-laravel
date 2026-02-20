@@ -2,27 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-// use App\Models\Patient; // Uncomment this later when you have a Patient model
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Fetch real data (Example logic)
-        // $totalPatients = Patient::count();
-        // $newPatientsToday = Patient::whereDate('created_at', today())->count();
+        $totalPatients = DB::table('patients')->count();
 
-        // 2. For now, let's use dummy data to test the design
-        $totalPatients = 120;
-        $pendingAppointments = 5;
-        $recentActivity = [
-            'Patient John Doe added',
-            'Vaccination record updated',
-            'Dr. Smith logged in'
-        ];
+        $pendingAppointments = DB::table('consultations')
+            ->whereIn('status', ['triage', 'pending_doctor'])
+            ->count();
 
-        // 3. Send this data to the view
-        return view('dashboard', compact('totalPatients', 'pendingAppointments', 'recentActivity'));
+        $doctorsOnDuty = DB::table('health_workers')->count();
+
+        $recentActivity = DB::table('audit_logs')
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get()
+            ->map(function ($log) {
+                $time = Carbon::parse($log->created_at)->format('M d, Y H:i');
+
+                return "{$time} – {$log->action} on {$log->table_name} #{$log->record_id}";
+            })
+            ->all();
+
+        return view('dashboard', [
+            'totalPatients' => $totalPatients,
+            'pendingAppointments' => $pendingAppointments,
+            'doctorsOnDuty' => $doctorsOnDuty,
+            'recentActivity' => $recentActivity,
+        ]);
     }
 }

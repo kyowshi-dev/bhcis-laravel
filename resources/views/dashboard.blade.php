@@ -17,7 +17,7 @@
 
         <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
             <h2 class="text-gray-500 text-sm font-semibold">DOCTORS ON DUTY</h2>
-            <p class="text-3xl font-bold text-gray-800">3</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $doctorsOnDuty }}</p>
         </div>
     </div>
 

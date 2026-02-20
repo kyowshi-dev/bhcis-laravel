@@ -12,68 +12,66 @@
 
     <!-- Animated Gradient Background -->
     <div class="absolute inset-0 bg-gradient-to-br from-sky-200 via-white to-emerald-200 animate-pulse opacity-70"></div>
-
-    <!-- Soft Glow Circles -->
     <div class="absolute -top-32 -left-32 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
     <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
 
-    <!-- Content Wrapper -->
-    <div class="relative z-10 flex flex-col min-h-screen">
+    <div class="relative z-10 flex min-h-screen">
 
-        <!-- Navbar -->
-        <nav class="backdrop-blur-lg bg-white/60 shadow-lg sticky top-0 border-b border-white/40">
-            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Sidebar -->
+        <aside class="w-64 shrink-0 flex flex-col backdrop-blur-lg bg-white/60 shadow-lg border-r border-white/40">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 p-6 border-b border-white/40">
+                <span class="text-3xl">🏥</span>
+                <span class="text-xl font-extrabold bg-gradient-to-r from-sky-600 to-emerald-500 bg-clip-text text-transparent">
+                    BHCIS
+                </span>
+                <span class="text-xs bg-white/70 px-2 py-0.5 rounded-full shadow-sm">Sta. Ana</span>
+            </a>
 
-                <a href="{{ url('/') }}" class="flex items-center gap-3">
-                    <span class="text-3xl">🏥</span>
-                    <span class="text-2xl font-extrabold bg-gradient-to-r from-sky-600 to-emerald-500 bg-clip-text text-transparent">
-                        BHCIS
-                    </span>
-                    <span class="text-xs bg-white/70 px-3 py-1 rounded-full shadow-sm">
-                        Sta. Ana
-                    </span>
+            <nav class="flex-1 p-4 space-y-1">
+                <a href="{{ route('dashboard') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
+                    <span>📋</span> Dashboard
                 </a>
+                <a href="{{ url('/patients') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
+                    <span>👥</span> Patients
+                </a>
+                <a href="{{ url('/consultations') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
+                    <span>🩺</span> Consultations
+                </a>
+                <a href="{{ route('users.index') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
+                    <span>👤</span> Users
+                </a>
+            </nav>
+        </aside>
 
-                <div class="space-x-8 text-sm font-medium flex items-center">
-                    <a href="{{ url('/patients') }}" 
-                       class="relative hover:text-sky-600 transition duration-300">
-                        Patients
-                    </a>
-        
-                    <a href="{{ url('/consultations') }}" 
-                       class="relative hover:text-sky-600 transition duration-300">
-                        Consultations
-                    </a>
+        <!-- Main area: top bar (logout only) + content -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <header class="shrink-0 flex justify-end items-center px-6 py-3 backdrop-blur-md bg-white/50 border-b border-white/40">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                            class="bg-gradient-to-r from-sky-500 to-emerald-500 text-white px-5 py-2 rounded-2xl text-sm font-semibold shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        Logout
+                    </button>
+                </form>
+            </header>
 
-                    <a href="{{ url('/users') }}" 
-                       class="relative hover:text-sky-600 transition duration-300">
-                        Users
-                    </a>
-
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" 
-                            class="bg-gradient-to-r from-sky-500 to-emerald-500 text-white px-6 py-2 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
-                            Logout
-                        </button>
-                    </form>
+            <main class="flex-1 px-6 py-8 overflow-auto">
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-white/70 backdrop-blur-xl shadow-2xl rounded-3xl p-12 border border-white/50">
+                        @yield('content')
+                    </div>
                 </div>
+            </main>
 
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="container mx-auto px-6 py-14 flex-grow">
-            <div class="bg-white/70 backdrop-blur-xl shadow-2xl rounded-3xl p-12 border border-white/50">
-                @yield('content')
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="text-center text-gray-600 text-sm py-6 backdrop-blur-md bg-white/50 border-t border-white/40">
-            &copy; 2026 Barangay Sta. Ana Health Center  
-            <span class="text-sky-600 font-medium">| Empowering Community Healthcare 💙</span>
-        </footer>
+            <footer class="shrink-0 text-center text-gray-600 text-sm py-4 backdrop-blur-md bg-white/50 border-t border-white/40">
+                &copy; 2026 Barangay Sta. Ana Health Center
+                <span class="text-sky-600 font-medium">| Empowering Community Healthcare 💙</span>
+            </footer>
+        </div>
 
     </div>
 
