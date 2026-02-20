@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\DashboardController; // Added this import
 use App\Http\Controllers\PatientController;
-use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserManagementController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,6 @@ use App\Http\Controllers\SearchController;
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'processLogin'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 // --- PROTECTED ROUTES (Only for logged-in users) ---
 Route::middleware('auth')->group(function () {
@@ -48,9 +48,15 @@ Route::middleware('auth')->group(function () {
 
     // Doctor's Workspace (View specific consultation)
     Route::get('/consultations/{id}', [ConsultationController::class, 'show'])->name('consultations.show');
-    
+
     // Doctor Actions (Diagnosis & Rx)
     Route::post('/consultations/{id}/diagnosis', [ConsultationController::class, 'addDiagnosis'])->name('consultations.diagnosis');
     Route::post('/consultations/{id}/prescription', [ConsultationController::class, 'addPrescription'])->name('consultations.prescription');
+
+    // 5. USER MANAGEMENT
+    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::post('/users/{user}/disable', [UserManagementController::class, 'disable'])->name('users.disable');
 
 }); // <--- End of Auth Group

@@ -39,10 +39,15 @@
                        class="relative hover:text-sky-600 transition duration-300">
                         Patients
                     </a>
-
+        
                     <a href="{{ url('/consultations') }}" 
                        class="relative hover:text-sky-600 transition duration-300">
                         Consultations
+                    </a>
+
+                    <a href="{{ url('/users') }}" 
+                       class="relative hover:text-sky-600 transition duration-300">
+                        Users
                     </a>
 
                     <form action="{{ route('logout') }}" method="POST" class="inline">

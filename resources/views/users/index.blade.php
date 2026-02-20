@@ -1,0 +1,89 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-extrabold text-sky-700">User Management</h1>
+            <p class="text-sm text-gray-600 mt-1">
+                View and manage all registered users in the system.
+            </p>
+        </div>
+
+        <a href="{{ route('users.create') }}"
+           class="inline-flex items-center px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-sm font-semibold text-white shadow-md hover:shadow-xl hover:scale-[1.02] transition">
+            + Add User
+        </a>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white/80 shadow-sm">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50/80">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Username
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Email
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Registered At
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Status
+                    </th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-100">
+                @forelse ($users as $user)
+                    <tr class="hover:bg-sky-50/60 transition-colors">
+                        <td class="px-6 py-3 text-sm text-gray-700">
+                            {{ $user->username }}
+                        </td>
+                        <td class="px-6 py-3 text-sm text-gray-500">
+                            {{ $user->email }}
+                        </td>
+                        <td class="px-6 py-3 text-sm">
+                            @if ($user->is_active)
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                    Active
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-700">
+                                    Disabled
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-3 text-sm text-right">
+                            @if ($user->is_active)
+                                <form action="{{ route('users.disable', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 rounded-full border border-red-300 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+                                        onclick="return confirm('Are you sure you want to disable this user?');"
+                                    >
+                                        Disable
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-6 text-center text-sm text-gray-500">
+                            No users found.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6">
+        {{ $users->links() }}
+    </div>
+@endsection
+
