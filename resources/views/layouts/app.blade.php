@@ -40,6 +40,10 @@
                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
                     <span>🩺</span> Consultations
                 </a>
+                <a href="{{ route('reports.index') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
+                    <span>📊</span> Reports
+                </a>
                 <a href="{{ route('users.index') }}"
                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 hover:bg-white/60 hover:text-sky-600 transition duration-200">
                     <span>👤</span> Users

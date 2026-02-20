@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultationController;
-use App\Http\Controllers\DashboardController; // Added this import
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
@@ -56,7 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/consultations/{id}/diagnosis', [ConsultationController::class, 'addDiagnosis'])->name('consultations.diagnosis');
     Route::post('/consultations/{id}/prescription', [ConsultationController::class, 'addPrescription'])->name('consultations.prescription');
 
-    // 5. USER MANAGEMENT
+    // 5. REPORTS (FHSIS)
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/morbidity', [ReportController::class, 'morbidity'])->name('reports.morbidity');
+    Route::get('/reports/consultation-summary', [ReportController::class, 'consultationSummary'])->name('reports.consultation-summary');
+
+    // 6. USER MANAGEMENT
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
