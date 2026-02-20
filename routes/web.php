@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patients.show');
 
     // 4. CONSULTATION MODULE
+    // Consultation History (list) – must be before /consultations/{id}
+    Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
+
     // Triage / New Admission
     Route::get('/patients/{id}/consultations/create', [ConsultationController::class, 'create'])->name('consultations.create');
     Route::post('/patients/{id}/consultations', [ConsultationController::class, 'store'])->name('consultations.store');

@@ -10,7 +10,7 @@
                     {{ substr($patient->first_name, 0, 1) }}{{ substr($patient->last_name, 0, 1) }}
                 </div>
                 <h2 class="text-xl font-bold mt-2">{{ $patient->last_name }}, {{ $patient->first_name }}</h2>
-                <p class="text-gray-500 text-sm">ID: {{ str_pad($patient->id, 6, '0', STR_PAD_LEFT) }}</p>
+                <p class="text-gray-500 text-sm">ID: PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}</p>
             </div>
 
             <hr class="my-4">
@@ -58,11 +58,9 @@
     <div class="md:col-span-2">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-800">Consultation History</h2>
-            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm">
-                <a href="{{ route('consultations.create', $patient->id) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm">
-    		+ New Consultation
-		</a>
-            </button>
+            <a href="{{ route('consultations.create', $patient->id) }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm font-medium">
+                + New Consultation
+            </a>
         </div>
 
         @if($history->isEmpty())
@@ -95,7 +93,7 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
-                                <a href="{{ route('consultations.show', $record->id) }}" class="text-green-600 hover:underline font-bold">View</a>
+                                <a href="{{ route('consultations.show', $record->id) }}" class="text-sky-600 hover:text-sky-800 font-semibold">View Details</a>
                             </td>
                         </tr>
                         @endforeach

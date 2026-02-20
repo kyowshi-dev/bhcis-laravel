@@ -1,13 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+            <a href="{{ route('consultations.index') }}" class="text-sm font-medium text-sky-600 hover:text-sky-800">← Consultation History</a>
+            <span class="text-gray-300">|</span>
+            <a href="{{ route('patients.show', $patient->id) }}" class="text-sm font-medium text-sky-600 hover:text-sky-800">Patient profile</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
 
     <div class="md:col-span-1 space-y-6">
         
         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">{{ $patient->last_name }}, {{ $patient->first_name }}</h2>
-            <p class="text-sm text-gray-500 mb-4">Patient ID: {{ str_pad($patient->id, 6, '0', STR_PAD_LEFT) }}</p>
+            <p class="text-sm text-gray-500 mb-4">Patient ID: PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}</p>
             <div class="text-sm space-y-2">
                 <div class="flex justify-between"><span>Sex:</span> <span class="font-medium">{{ $patient->sex }}</span></div>
                 <div class="flex justify-between"><span>Age:</span> <span class="font-medium">{{ \Carbon\Carbon::parse($patient->date_of_birth)->age }} y/o</span></div>
@@ -124,7 +134,7 @@
                             <tr class="border-b last:border-0">
                                 <td class="p-2 font-bold text-gray-700">{{ $rx->medicine_name }}</td>
                                 <td class="p-2">{{ $rx->dosage }} ({{ $rx->duration }})</td>
-                                <td class="p-2 text-center bg-gray-50 rounded">{{ $rx->quantity }}</td>
+                                <td class="p-2 text-center bg-gray-50 rounded">{{ $rx->quantity ?? '—' }}</td>
                             </tr>
                             @endforeach
                         </tbody>

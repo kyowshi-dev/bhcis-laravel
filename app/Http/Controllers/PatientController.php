@@ -132,14 +132,14 @@ class PatientController extends Controller
         // 2. Calculate Age
         $patient->age = Carbon::parse($patient->date_of_birth)->age;
 
-        // 3. Load Consultations (History)
+        // 3. Load Consultations (History) – worker_id is health_workers.id
         $history = DB::table('consultations')
-            ->leftJoin('users', 'consultations.worker_id', '=', 'users.id')
+            ->leftJoin('health_workers', 'consultations.worker_id', '=', 'health_workers.id')
             ->where('patient_id', $id)
             ->select(
                 'consultations.*',
-                'users.username as worker_name',  // <--- FIXED: Uses 'username'
-                'consultations.nature_of_visit as complaint_name' // Fallback for complaint
+                DB::raw("CONCAT(health_workers.first_name, ' ', health_workers.last_name) as worker_name"),
+                'consultations.nature_of_visit as complaint_name'
             )
             ->orderByDesc('consultations.created_at')
             ->get();
