@@ -3,86 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - RHU System</title>
+    <title>Login - BHCIS Sta. Ana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --font-display: 'Fraunces', Georgia, serif;
+            --font-body: 'Source Sans 3', system-ui, sans-serif;
+            --bg-page: #f5f0e8;
+            --bg-surface: #fdfcfa;
+            --bg-card: #ffffff;
+            --ink: #1a1f1c;
+            --ink-muted: #5c6560;
+            --border: rgba(26, 31, 28, 0.12);
+            --primary: #0d4a3c;
+            --accent: #c45c41;
+            --accent-hover: #a84d36;
+            --teal-soft: rgba(13, 74, 60, 0.08);
+            --shadow-md: 0 4px 12px rgba(26, 31, 28, 0.08);
+            --shadow-lg: 0 12px 32px rgba(26, 31, 28, 0.12);
+        }
+        .grain::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeSlideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    </style>
 </head>
+<body class="min-h-screen flex items-center justify-center font-sans antialiased overflow-hidden" style="background: var(--bg-page); font-family: var(--font-body);">
+    <div class="grain fixed inset-0 z-0"></div>
+    <div class="absolute inset-0 z-0 opacity-50" style="background: linear-gradient(145deg, var(--teal-soft) 0%, transparent 40%, rgba(196,92,65,0.06) 100%);"></div>
 
-<body class="relative min-h-screen flex items-center justify-center font-sans overflow-hidden">
+    <div class="relative z-10 w-full max-w-md mx-4">
+        <div class="rounded-2xl border p-8 lg:p-10 animate-in opacity-0" style="background: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow-lg);">
+            <div class="text-center mb-8">
+                <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white font-display font-semibold text-xl mb-4" style="background: var(--primary); font-family: var(--font-display);">B</div>
+                <h1 class="font-display font-semibold text-2xl lg:text-3xl mb-2" style="color: var(--ink); font-family: var(--font-display);">BHCIS</h1>
+                <p class="text-sm" style="color: var(--ink-muted);">Sta. Ana Health Center — sign in to continue</p>
+            </div>
 
-    <!-- Gradient Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-sky-200 via-white to-emerald-200"></div>
+            <form action="{{ route('login.process') }}" method="POST">
+                @csrf
 
-    <!-- Soft Glow Effects -->
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                @if ($errors->any())
+                    <div class="mb-6 p-4 rounded-lg border-l-4 text-sm" style="background: rgba(196, 92, 65, 0.08); border-color: var(--accent); color: var(--accent-hover);">
+                        <p class="font-semibold">Login failed</p>
+                        <p class="mt-1">{{ $errors->first() }}</p>
+                    </div>
+                @endif
 
-    <!-- Login Card -->
-    <div class="relative bg-white/70 backdrop-blur-xl p-10 rounded-3xl shadow-2xl w-full max-w-md border border-white/50">
-
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="text-4xl mb-3">🏥</div>
-            <h1 class="text-3xl font-extrabold bg-gradient-to-r from-sky-600 to-emerald-500 bg-clip-text text-transparent">
-                RHU System
-            </h1>
-            <p class="text-gray-600 mt-2">Secure Access to Healthcare Records</p>
-        </div>
-
-        <form action="{{ route('login.process') }}" method="POST">
-            @csrf
-
-            @if ($errors->any())
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm">
-                    <p class="font-bold">Login Failed</p>
-                    <p class="text-sm">{{ $errors->first() }}</p>
+                <div class="mb-5">
+                    <label for="username" class="block text-sm font-medium mb-2" style="color: var(--ink);">Username</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}"
+                           class="w-full px-4 py-3 rounded-lg border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
+                           style="border-color: var(--border); --tw-ring-color: var(--primary);"
+                           placeholder="Enter your username" required autofocus>
                 </div>
-            @endif
 
-            <!-- Username -->
-            <div class="mb-5">
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-                    Username
-                </label>
-                <input type="text" name="username" id="username"
-                       value="{{ old('username') }}"
-                       class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent transition duration-300 shadow-sm"
-                       placeholder="Enter your username" required autofocus>
-            </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium mb-2" style="color: var(--ink);">Password</label>
+                    <input type="password" name="password" id="password"
+                           class="w-full px-4 py-3 rounded-lg border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
+                           style="border-color: var(--border); --tw-ring-color: var(--primary);"
+                           placeholder="Enter your password" required>
+                </div>
 
-            <!-- Password -->
-            <div class="mb-6">
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                    Password
-                </label>
-                <input type="password" name="password" id="password"
-                       class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300 shadow-sm"
-                       placeholder="Enter your password" required>
-            </div>
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center text-sm cursor-pointer" style="color: var(--ink-muted);">
+                        <input type="checkbox" name="remember" class="mr-2 h-4 w-4 rounded border-[var(--border)]" style="accent-color: var(--primary);">
+                        Remember me
+                    </label>
+                </div>
 
-            <!-- Remember -->
-            <div class="flex items-center justify-between mb-6">
-                <label class="flex items-center text-sm text-gray-600">
-                    <input type="checkbox" name="remember"
-                           class="mr-2 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
-                    Remember me
-                </label>
-            </div>
+                <button type="submit" class="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all duration-200 hover:opacity-95 active:scale-[0.99]"
+                        style="background: var(--accent); box-shadow: 0 2px 8px rgba(196, 92, 65, 0.3);">
+                    Sign in
+                </button>
+            </form>
 
-            <!-- Button -->
-            <button type="submit"
-                class="w-full bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-semibold py-3 rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300">
-                Sign In
-            </button>
-
-        </form>
-
-        <!-- Footer -->
-        <p class="text-center text-gray-500 text-xs mt-8">
-            &copy; {{ date('Y') }} Rural Health Unit Management System  
-            <span class="text-sky-600 font-medium">| Community Care First 💙</span>
-        </p>
-
+            <p class="text-center text-xs mt-8" style="color: var(--ink-muted);">
+                &copy; {{ date('Y') }} Barangay Sta. Ana Health Center
+            </p>
+        </div>
     </div>
-
 </body>
 </html>

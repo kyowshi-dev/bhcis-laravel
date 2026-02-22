@@ -51,6 +51,14 @@
                     @endif
                 </div>
             </div>
+
+            <div class="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t">
+                <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Immunization</h4>
+                <p class="text-xs lg:text-sm text-gray-600 mb-2">{{ $immunizationCount }} dose(s) recorded.</p>
+                <a href="{{ route('immunizations.patient', $patient->id) }}" class="inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs lg:text-sm font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition">
+                    View / add immunization
+                </a>
+            </div>
         </div>
     </div>
 

@@ -1,114 +1,84 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-4 lg:space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+<div class="space-y-5 lg:space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h1 class="text-2xl lg:text-3xl font-extrabold text-sky-700">Patient Records</h1>
-            <p class="text-xs lg:text-sm text-gray-600 mt-1">
-                Search and manage patient information.
-            </p>
+            <h1 class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">Patient records</h1>
+            <p class="text-sm mt-1" style="color: var(--ink-muted);">Search and manage patient information.</p>
         </div>
-
         <a href="{{ url('/patients/create') }}"
-           class="inline-flex items-center justify-center px-4 lg:px-5 py-2 lg:py-2.5 rounded-xl lg:rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-xs lg:text-sm font-semibold text-white shadow-md hover:shadow-xl transition">
-            + Register New Patient
+           class="inline-flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-200 hover:opacity-95 active:scale-[0.98] shrink-0"
+           style="background: var(--accent); box-shadow: 0 2px 8px rgba(196, 92, 65, 0.25);">
+            + Register new patient
         </a>
     </div>
 
-    <div class="bg-white/80 rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 p-3 lg:p-4" x-data="patientSearch()">
+    <div class="rounded-xl border p-4" style="background: var(--bg-surface); border-color: var(--border);" x-data="patientSearch()">
         <div class="relative">
-            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                🔍
-            </span>
-            <input
-                type="text"
-                x-model="query"
-                @input.debounce.300ms="search()"
-                placeholder="Search by patient name or ID..."
-                class="w-full pl-9 pr-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
-                autocomplete="off"
-            >
+            <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none" style="color: var(--ink-subtle);">🔍</span>
+            <input type="text" x-model="query" @input.debounce.300ms="search()"
+                   placeholder="Search by patient name or ID..."
+                   class="w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition"
+                   style="border-color: var(--border); color: var(--ink); --tw-ring-color: var(--primary);"
+                   autocomplete="off">
         </div>
-
-        <div x-show="results.length > 0" class="mt-3 border border-gray-200 rounded-xl bg-white shadow-lg overflow-hidden" style="display: none;">
+        <div x-show="results.length > 0" class="mt-3 rounded-lg border overflow-hidden" style="display: none; border-color: var(--border); background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
             <ul>
                 <template x-for="patient in results" :key="patient.id">
-                    <li class="border-b last:border-0 hover:bg-sky-50 cursor-pointer px-3 lg:px-4 py-2 lg:py-2.5 transition">
-                        <a :href="'/patients/' + patient.id" class="block">
-                            <div class="font-semibold text-sm text-gray-800" x-text="patient.text"></div>
-                            <div class="text-xs text-gray-500" x-text="patient.subtext"></div>
+                    <li class="border-b last:border-0 transition-colors hover:bg-black/[0.03]">
+                        <a :href="'/patients/' + patient.id" class="block px-4 py-2.5">
+                            <div class="font-medium text-sm" style="color: var(--ink);" x-text="patient.text"></div>
+                            <div class="text-xs mt-0.5" style="color: var(--ink-muted);" x-text="patient.subtext"></div>
                         </a>
                     </li>
                 </template>
             </ul>
         </div>
-
-        <div x-show="query.length > 1 && results.length === 0 && !loading"
-             class="mt-2 text-gray-500 text-xs"
-             style="display: none;">
+        <div x-show="query.length > 1 && results.length === 0 && !loading" class="mt-2 text-xs" style="display: none; color: var(--ink-muted);">
             No patient found. You may register a new record.
         </div>
     </div>
 
-    <div class="bg-white/80 rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="rounded-xl border overflow-hidden" style="background: var(--bg-surface-elevated); border-color: var(--border); box-shadow: var(--shadow-sm);">
         <div class="overflow-x-auto">
             <table class="min-w-full text-left text-xs lg:text-sm">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap">ID</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap">Name</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap">Age</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap hidden sm:table-cell">Gender</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap hidden md:table-cell">Phone</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap hidden lg:table-cell">Last Visit</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs whitespace-nowrap">Status</th>
-                        <th class="px-2 lg:px-4 py-2 lg:py-3 font-semibold text-gray-500 uppercase text-xs text-right whitespace-nowrap">Actions</th>
+                <thead>
+                    <tr style="background: var(--teal-soft);">
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap" style="color: var(--ink-muted);">ID</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap" style="color: var(--ink-muted);">Name</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap" style="color: var(--ink-muted);">Age</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap hidden sm:table-cell" style="color: var(--ink-muted);">Gender</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap hidden md:table-cell" style="color: var(--ink-muted);">Phone</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap hidden lg:table-cell" style="color: var(--ink-muted);">Last visit</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider whitespace-nowrap" style="color: var(--ink-muted);">Status</th>
+                        <th class="px-4 py-3 font-semibold uppercase tracking-wider text-right whitespace-nowrap" style="color: var(--ink-muted);">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-[var(--border)]">
                     @forelse ($patients as $patient)
-                        <tr class="hover:bg-sky-50/50 transition-colors">
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 font-semibold text-gray-700 whitespace-nowrap">
-                                PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}
-                            </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-gray-800">
+                        <tr class="transition-colors hover:bg-black/[0.02]">
+                            <td class="px-4 py-2.5 font-medium whitespace-nowrap" style="color: var(--ink);">PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-4 py-2.5" style="color: var(--ink);">
                                 <div class="font-medium">{{ $patient->last_name }}, {{ $patient->first_name }}</div>
-                                <div class="text-xs text-gray-500 sm:hidden">{{ $patient->sex }}</div>
+                                <div class="text-xs sm:hidden" style="color: var(--ink-muted);">{{ $patient->sex }}</div>
                             </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-gray-700 whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($patient->date_of_birth)->age }}
+                            <td class="px-4 py-2.5 whitespace-nowrap" style="color: var(--ink-muted);">{{ \Carbon\Carbon::parse($patient->date_of_birth)->age }}</td>
+                            <td class="px-4 py-2.5 whitespace-nowrap hidden sm:table-cell" style="color: var(--ink-muted);">{{ $patient->sex }}</td>
+                            <td class="px-4 py-2.5 whitespace-nowrap hidden md:table-cell" style="color: var(--ink-muted);">{{ $patient->contact_number ?? '—' }}</td>
+                            <td class="px-4 py-2.5 whitespace-nowrap hidden lg:table-cell" style="color: var(--ink-muted);">
+                                @if ($patient->last_visit) {{ \Carbon\Carbon::parse($patient->last_visit)->format('Y-m-d') }} @else — @endif
                             </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-gray-700 whitespace-nowrap hidden sm:table-cell">
-                                {{ $patient->sex }}
+                            <td class="px-4 py-2.5">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" style="background: var(--teal-soft); color: var(--primary);">Active</span>
                             </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-gray-700 whitespace-nowrap hidden md:table-cell">
-                                {{ $patient->contact_number ?? '—' }}
-                            </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-gray-700 whitespace-nowrap hidden lg:table-cell">
-                                @if ($patient->last_visit)
-                                    {{ \Carbon\Carbon::parse($patient->last_visit)->format('Y-m-d') }}
-                                @else
-                                    —
-                                @endif
-                            </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5">
-                                <span class="inline-flex items-center px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
-                                    Active
-                                </span>
-                            </td>
-                            <td class="px-2 lg:px-4 py-2 lg:py-2.5 text-right whitespace-nowrap">
-                                <a href="{{ route('patients.show', $patient->id) }}"
-                                   class="text-xs lg:text-sm font-semibold text-sky-600 hover:text-sky-800">
-                                    View
-                                </a>
+                            <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                                <a href="{{ route('patients.show', $patient->id) }}" class="font-semibold text-sm transition-colors hover:underline" style="color: var(--primary);">View</a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-4 py-6 text-center text-sm text-gray-500">
-                                No patients found.
-                            </td>
+                            <td colspan="8" class="px-4 py-8 text-center text-sm" style="color: var(--ink-muted);">No patients found.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -116,7 +86,7 @@
         </div>
     </div>
 
-    <div class="mt-4">
+    <div class="pt-2">
         {{ $patients->links() }}
     </div>
 </div>
@@ -128,17 +98,12 @@
             results: [],
             loading: false,
             async search() {
-                if (this.query.length < 2) {
-                    this.results = [];
-                    return;
-                }
+                if (this.query.length < 2) { this.results = []; return; }
                 this.loading = true;
                 try {
                     const response = await fetch(`/search/patients?query=${this.query}`);
                     this.results = await response.json();
-                } catch (error) {
-                    console.error('Search failed:', error);
-                }
+                } catch (e) { console.error('Search failed:', e); }
                 this.loading = false;
             },
         };

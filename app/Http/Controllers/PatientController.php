@@ -144,6 +144,8 @@ class PatientController extends Controller
             ->orderByDesc('consultations.created_at')
             ->get();
 
-        return view('patients.show', compact('patient', 'history'));
+        $immunizationCount = DB::table('immunization_records')->where('patient_id', $id)->count();
+
+        return view('patients.show', compact('patient', 'history', 'immunizationCount'));
     }
 }
