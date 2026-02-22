@@ -90,5 +90,8 @@ class DatabaseSeeder extends Seeder
 
         // 7. VACCINES (EPI / Immunization lookup)
         $this->call(VaccineSeeder::class);
+
+        // 8. ICD-10 diagnosis codes (optional: copy icd102019syst_codes.sql to storage/app/ or set BHCIS_ICD_SQL_PATH)
+        $this->call(IcdDiagnosisSeeder::class);
     }
 }
