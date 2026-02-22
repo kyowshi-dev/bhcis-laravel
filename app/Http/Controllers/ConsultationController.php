@@ -116,42 +116,46 @@ class ConsultationController extends Controller
     // 2. Save the Data (Triage Save)
     public function store(Request $request, $patientId)
     {
-        $request->validate([
-            'nature_of_visit' => 'required',
-            'bp_systolic' => 'nullable|numeric',
-            'bp_diastolic' => 'nullable|numeric',
-            'temperature' => 'required|numeric',
+        $validated = $request->validate([
+            'nature_of_visit' => ['required', 'string', 'max:255'],
+            'chief_complaint' => ['nullable', 'string', 'max:1000'],
+            'bp_systolic' => ['nullable', 'numeric', 'min:0', 'max:300'],
+            'bp_diastolic' => ['nullable', 'numeric', 'min:0', 'max:200'],
+            'temperature' => ['required', 'numeric', 'min:30', 'max:45'],
+            'weight' => ['nullable', 'numeric', 'min:0', 'max:500'],
+            'height' => ['nullable', 'numeric', 'min:0', 'max:300'],
+        ], [
+            'temperature.required' => 'Temperature is required.',
+            'temperature.min' => 'Temperature must be at least 30°C.',
+            'temperature.max' => 'Temperature must not exceed 45°C.',
         ]);
 
-        DB::transaction(function () use ($request, $patientId) {
-
-            // A. Create Consultation Record
+        DB::transaction(function () use ($validated, $patientId) {
             $consultationId = DB::table('consultations')->insertGetId([
                 'patient_id' => $patientId,
-                'worker_id' => 1, // Hardcoded for now
+                'worker_id' => 1,
                 'status' => 'pending_doctor',
-                'nature_of_visit' => $request->nature_of_visit,
+                'nature_of_visit' => $validated['nature_of_visit'],
                 'chief_complaint_id' => null,
-                'complaint_text' => $request->chief_complaint,
+                'complaint_text' => $validated['chief_complaint'] ?? null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            // B. Create Vitals Record
             DB::table('vitals')->insert([
                 'consultation_id' => $consultationId,
-                'bp_systolic' => $request->bp_systolic,
-                'bp_diastolic' => $request->bp_diastolic,
-                'weight_kg' => $request->weight,
-                'height_cm' => $request->height,
-                'temperature_c' => $request->temperature,
+                'bp_systolic' => $validated['bp_systolic'] ?? null,
+                'bp_diastolic' => $validated['bp_diastolic'] ?? null,
+                'weight_kg' => $validated['weight'] ?? null,
+                'height_cm' => $validated['height'] ?? null,
+                'temperature_c' => $validated['temperature'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         });
 
         return redirect()->route('patients.show', $patientId)
-            ->with('success', 'Consultation started successfully!');
+            ->with('success', 'Consultation started. Patient is in the doctor queue.');
     }
 
     // 3. Show the Doctor's Workspace (View Consultation)
@@ -165,8 +169,16 @@ class ConsultationController extends Controller
 
         $patient = DB::table('patients')->find($consultation->patient_id);
 
-        // 1. Fetch the Consultation Data
         $vitals = DB::table('vitals')->where('consultation_id', $id)->first();
+        if (! $vitals) {
+            $vitals = (object) [
+                'bp_systolic' => null,
+                'bp_diastolic' => null,
+                'temperature_c' => null,
+                'weight_kg' => null,
+                'height_cm' => null,
+            ];
+        }
 
         // 2. Fetch Existing Records (History)
         $existingDiagnoses = DB::table('diagnosis_records')
@@ -223,24 +235,25 @@ class ConsultationController extends Controller
     // 5. Save a Prescription
     public function addPrescription(Request $request, $id)
     {
-        $request->validate([
-            'medicine_id' => 'required|exists:medicines_lookup,id',
-            'quantity' => 'required|integer|min:1',
-            'dosage' => 'required|string', // e.g., "1 tab 3x a day"
-            'duration' => 'nullable|string', // e.g., "7 days"
+        $validated = $request->validate([
+            'medicine_id' => ['required', 'exists:medicines_lookup,id'],
+            'dosage' => ['required', 'string', 'max:255'],
+            'frequency' => ['nullable', 'string', 'max:255'],
+            'duration' => ['nullable', 'string', 'max:255'],
+            'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
         DB::table('prescriptions')->insert([
             'consultation_id' => $id,
-            'medicine_id' => $request->medicine_id,
-            'quantity' => $request->quantity,
-            'dosage' => $request->dosage,
-            'duration' => $request->duration,
-            'prescribed_by' => 1, // Hardcoded Doctor ID
+            'medicine_id' => $validated['medicine_id'],
+            'dosage' => $validated['dosage'],
+            'frequency' => $validated['frequency'] ?? null,
+            'duration' => $validated['duration'] ?? null,
+            'quantity' => $validated['quantity'] ?? null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Medicine added successfully!');
+        return redirect()->back()->with('success', 'Prescription added successfully.');
     }
 }
