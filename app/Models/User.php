@@ -6,11 +6,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    private ?string $cachedRoleName = null;
 
     /**
      * The attributes that are mass assignable.
@@ -46,5 +49,48 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function roleName(): ?string
+    {
+        if ($this->cachedRoleName !== null) {
+            return $this->cachedRoleName;
+        }
+
+        if ($this->role_id === null) {
+            return null;
+        }
+
+        $this->cachedRoleName = DB::table('user_roles')
+            ->where('id', $this->role_id)
+            ->value('role_name');
+
+        return $this->cachedRoleName;
+    }
+
+    public function hasRole(string ...$roles): bool
+    {
+        $roleName = $this->roleName();
+
+        if ($roleName === null) {
+            return false;
+        }
+
+        return in_array($roleName, $roles, true);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
+    public function isNurse(): bool
+    {
+        return $this->hasRole('Nurse');
+    }
+
+    public function isBhw(): bool
+    {
+        return $this->hasRole('BHW');
     }
 }

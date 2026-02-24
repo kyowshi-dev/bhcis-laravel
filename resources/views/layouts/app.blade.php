@@ -96,6 +96,11 @@
             </div>
 
             <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
+                @php
+                    /** @var \App\Models\User|null $authUser */
+                    $authUser = auth()->user();
+                @endphp
+
                 <a href="{{ route('dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                     <span class="text-base opacity-70">📋</span> <span>Dashboard</span>
                 </a>
@@ -108,12 +113,17 @@
                 <a href="{{ route('immunizations.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                     <span class="text-base opacity-70">💉</span> <span>Immunization</span>
                 </a>
-                <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">📊</span> <span>Reports</span>
-                </a>
-                <a href="{{ route('users.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">👤</span> <span>Users</span>
-                </a>
+                @if ($authUser && $authUser->hasRole('Admin', 'BHW', 'Nurse'))
+                    <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
+                        <span class="text-base opacity-70">📊</span> <span>Reports</span>
+                    </a>
+                @endif
+
+                @if ($authUser && $authUser->isAdmin())
+                    <a href="{{ route('users.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
+                        <span class="text-base opacity-70">👤</span> <span>Users</span>
+                    </a>
+                @endif
                 <a href="{{ route('settings.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                     <span class="text-base opacity-70">⚙️</span> <span>Settings</span>
                 </a>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ConsultationController extends Controller
@@ -130,10 +131,18 @@ class ConsultationController extends Controller
             'temperature.max' => 'Temperature must not exceed 45°C.',
         ]);
 
-        DB::transaction(function () use ($validated, $patientId) {
+        $workerId = DB::table('health_workers')
+            ->where('user_id', Auth::id())
+            ->value('id');
+
+        if ($workerId === null) {
+            abort(403, 'No health worker profile is linked to this user.');
+        }
+
+        DB::transaction(function () use ($validated, $patientId, $workerId) {
             $consultationId = DB::table('consultations')->insertGetId([
                 'patient_id' => $patientId,
-                'worker_id' => 1,
+                'worker_id' => $workerId,
                 'status' => 'pending_doctor',
                 'nature_of_visit' => $validated['nature_of_visit'],
                 'chief_complaint_id' => null,
@@ -216,12 +225,19 @@ class ConsultationController extends Controller
             'remarks' => 'nullable|string',
         ]);
 
-        // Save the diagnosis
+        $workerId = DB::table('health_workers')
+            ->where('user_id', Auth::id())
+            ->value('id');
+
+        if ($workerId === null) {
+            abort(403, 'No health worker profile is linked to this user.');
+        }
+
         DB::table('diagnosis_records')->insert([
             'consultation_id' => $id,
             'diagnosis_id' => $request->diagnosis_id,
             'remarks' => $request->remarks,
-            'diagnosed_by' => 1, // Hardcoded Doctor ID
+            'diagnosed_by' => $workerId,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
