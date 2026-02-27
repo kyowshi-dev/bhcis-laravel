@@ -104,6 +104,9 @@
                 <a href="{{ route('dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                     <span class="text-base opacity-70">📋</span> <span>Dashboard</span>
                 </a>
+                <a href="{{ route('households.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
+                    <span class="text-base opacity-70">🏠</span> <span>Households</span>
+                </a>
                 <a href="{{ url('/patients') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                     <span class="text-base opacity-70">👥</span> <span>Patients</span>
                 </a>
@@ -135,12 +138,24 @@
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg hover:bg-black/5 transition-[background]" style="color: var(--ink-muted);">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
-                <form action="{{ route('logout') }}" method="POST" class="ml-auto">
-                    @csrf
-                    <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-[background,transform] duration-200 hover:scale-[1.02] active:scale-[0.98]" style="background: var(--accent); box-shadow: var(--shadow-sm);">
-                        Logout
-                    </button>
-                </form>
+                <div class="ml-auto flex items-center gap-4">
+                    @if ($authUser)
+                        <div class="hidden sm:flex flex-col items-end text-xs leading-tight">
+                            <span class="font-semibold" style="color: var(--ink);">
+                                {{ $authUser->username }}
+                            </span>
+                            <span style="color: var(--ink-muted);">
+                                Role: {{ $authUser->roleName() ?? 'Unassigned' }}
+                            </span>
+                        </div>
+                    @endif
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-[background,transform] duration-200 hover:scale-[1.02] active:scale-[0.98]" style="background: var(--accent); box-shadow: var(--shadow-sm);">
+                            Logout
+                        </button>
+                    </form>
+                </div>
             </header>
 
             <main class="flex-1 px-4 lg:px-6 py-6 lg:py-8 overflow-auto">

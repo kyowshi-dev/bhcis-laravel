@@ -74,21 +74,76 @@ class ReportController extends Controller
             ->whereBetween('created_at', [$start, $end])
             ->count();
 
-        $byStatus = DB::table('consultations')
+        $byNature = DB::table('consultations')
             ->whereBetween('created_at', [$start, $end])
-            ->select('status', DB::raw('COUNT(*) as count'))
-            ->groupBy('status')
-            ->orderByDesc('count')
-            ->get();
+            ->select('nature_of_visit', DB::raw('COUNT(*) as count'))
+            ->groupBy('nature_of_visit')
+            ->get()
+            ->keyBy('nature_of_visit');
+
+        $prenatalCount = (int) ($byNature['Prenatal']->count ?? 0);
+        $immunizationCount = (int) ($byNature['Immunization']->count ?? 0);
+
+        $postpartumCount = 0;
+        $familyPlanningCount = 0;
+
+        $generalCount = max(0, $total - $prenatalCount - $immunizationCount - $postpartumCount - $familyPlanningCount);
+
+        $programs = collect([
+            [
+                'key' => 'general',
+                'label' => 'General Consultation',
+                'description' => 'Includes all walk-in and scheduled visits, plus non-specialized consultations.',
+                'count' => $generalCount,
+            ],
+            [
+                'key' => 'prenatal',
+                'label' => 'Prenatal Care',
+                'description' => 'All prenatal consults and scheduled antenatal checkups.',
+                'count' => $prenatalCount,
+            ],
+            [
+                'key' => 'postpartum',
+                'label' => 'Postpartum Care',
+                'description' => 'Postpartum follow-up and checkups after delivery.',
+                'count' => $postpartumCount,
+            ],
+            [
+                'key' => 'immunization',
+                'label' => 'Immunization',
+                'description' => 'Routine and catch-up immunization services.',
+                'count' => $immunizationCount,
+            ],
+            [
+                'key' => 'family_planning',
+                'label' => 'Family Planning',
+                'description' => 'Counseling and family planning services.',
+                'count' => $familyPlanningCount,
+            ],
+        ]);
+
+        $previousStart = $start->copy()->subMonth()->startOfDay();
+        $previousEnd = $previousStart->copy()->endOfMonth();
+
+        $previousTotal = DB::table('consultations')
+            ->whereBetween('created_at', [$previousStart, $previousEnd])
+            ->count();
+
+        $growthPercent = null;
+
+        if ($previousTotal > 0) {
+            $growthPercent = (($total - $previousTotal) / $previousTotal) * 100;
+        }
 
         $reportDate = $start->format('F Y');
 
         return view('reports.consultation_summary', [
             'total' => $total,
-            'byStatus' => $byStatus,
+            'programs' => $programs,
             'reportDate' => $reportDate,
             'month' => (int) $month,
             'year' => (int) $year,
+            'growthPercent' => $growthPercent,
         ]);
     }
 }

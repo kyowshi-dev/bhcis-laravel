@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HouseholdController;
 use App\Http\Controllers\ImmunizationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReportController;
@@ -34,7 +35,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/medicines', [SearchController::class, 'medicines'])->name('search.medicines');
 
     // 3. PATIENT MANAGEMENT
-    // List Patients
+    // Households (Census)
+    Route::get('/households', [HouseholdController::class, 'index'])
+        ->name('households.index')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::get('/households/create', [HouseholdController::class, 'create'])
+        ->name('households.create')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::post('/households', [HouseholdController::class, 'store'])
+        ->name('households.store')
+        ->middleware('role:Admin,BHW,Nurse');
+
+    // Patients
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
 
     // Create Patient (Order matters: This must be BEFORE {id})

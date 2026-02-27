@@ -17,6 +17,22 @@ class DashboardController extends Controller
 
         $doctorsOnDuty = DB::table('health_workers')->count();
 
+        $onDutyStaff = DB::table('health_workers')
+            ->select('first_name', 'last_name', 'position')
+            ->orderBy('last_name')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                $initials = mb_strtoupper(mb_substr($row->first_name, 0, 1).mb_substr($row->last_name, 0, 1));
+
+                return [
+                    'name' => trim($row->first_name.' '.$row->last_name),
+                    'position' => (string) $row->position,
+                    'initials' => $initials,
+                ];
+            })
+            ->all();
+
         $recentActivity = DB::table('audit_logs')
             ->orderByDesc('created_at')
             ->limit(5)
@@ -32,6 +48,7 @@ class DashboardController extends Controller
             'totalPatients' => $totalPatients,
             'pendingAppointments' => $pendingAppointments,
             'doctorsOnDuty' => $doctorsOnDuty,
+            'onDutyStaff' => $onDutyStaff,
             'recentActivity' => $recentActivity,
         ]);
     }
