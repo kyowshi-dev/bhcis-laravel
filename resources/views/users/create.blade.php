@@ -1,0 +1,120 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="space-y-4 lg:space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+            <h1 class="text-xl lg:text-2xl font-extrabold text-sky-700">Add New User</h1>
+            <p class="text-xs lg:text-sm text-gray-600 mt-1">
+                Create a new staff account for the system.
+            </p>
+        </div>
+
+        <a href="{{ route('users.index') }}"
+           class="inline-flex items-center px-3 lg:px-4 py-2 rounded-xl border border-gray-300 bg-white text-xs lg:text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+            ← Back
+        </a>
+    </div>
+
+    <form action="{{ route('users.store') }}" method="POST" class="space-y-4 lg:space-y-6">
+        @csrf
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+            <div>
+                <label for="role_id" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Role <span class="text-red-500">*</span>
+                </label>
+                <select
+                    id="role_id"
+                    name="role_id"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                    <option value="">Select role...</option>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>
+                            {{ $role->role_name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('role_id')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="username" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Username <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="{{ old('username') }}"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                @error('username')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="email" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Email Address <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                @error('email')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="password" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Password <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                @error('password')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="md:col-span-2">
+                <label for="password_confirmation" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Confirm Password <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="password"
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-end gap-2 lg:gap-3 pt-2">
+            <a href="{{ route('users.index') }}" class="px-4 lg:px-5 py-2 lg:py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium text-xs lg:text-sm hover:bg-gray-50">Cancel</a>
+            <button
+                type="submit"
+                class="px-5 lg:px-6 py-2 lg:py-2.5 rounded-xl text-xs lg:text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-emerald-500 shadow-md hover:shadow-xl transition"
+            >
+                Save User
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

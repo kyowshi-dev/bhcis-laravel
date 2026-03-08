@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        
+
         // Link Admin to Health Worker Profile
         DB::table('health_workers')->insertOrIgnore([
             'user_id' => 1,
@@ -87,5 +87,11 @@ class DatabaseSeeder extends Seeder
             $zones[] = ['zone_number' => "Zone $i"];
         }
         DB::table('zones')->insertOrIgnore($zones);
+
+        // 7. VACCINES (EPI / Immunization lookup)
+        $this->call(VaccineSeeder::class);
+
+        // 8. ICD-10 diagnosis codes (optional: copy icd102019syst_codes.sql to storage/app/ or set BHCIS_ICD_SQL_PATH)
+        $this->call(IcdDiagnosisSeeder::class);
     }
 }

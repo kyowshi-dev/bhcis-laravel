@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -49,7 +49,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('expiration_date')->nullable();
         });
-        
+
         Schema::create('complaint_lookup', function (Blueprint $table) {
             $table->id();
             $table->string('complaint');
@@ -80,7 +80,7 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->foreignId('household_id')->constrained('households')->restrictOnDelete();
-            
+
             // Basic Info
             $table->string('last_name');
             $table->string('first_name');
@@ -90,18 +90,20 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('birth_place')->nullable();
             $table->string('blood_type')->nullable();
-            
+
             // Socio-Economic
             $table->string('civil_status');
             $table->string('educational_attainment')->nullable();
             $table->string('employment_status')->nullable();
             $table->boolean('has_4ps')->default(false);
             $table->boolean('has_nhts')->default(false);
-            
+
             $table->timestamps();
-            
-            // Search Optimization
-            $table->fullText(['last_name', 'first_name']); 
+
+            // Search Optimization (MySQL/MariaDB only)
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['last_name', 'first_name']);
+            }
         });
 
         // 5. Medical Records
@@ -136,7 +138,7 @@ return new class extends Migration
             $table->foreignId('diagnosed_by')->constrained('health_workers');
             $table->timestamps();
         });
-        
+
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('consultation_id')->constrained('consultations');
@@ -160,9 +162,11 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
         });
 
-        // Raw SQL for FullText Search Indexes
-        DB::statement('ALTER TABLE diagnosis_lookup ADD FULLTEXT(diagnosis_name, diagnosis_code)');
-        DB::statement('ALTER TABLE medicines_lookup ADD FULLTEXT(medicine_name)');
+        // Raw SQL for FullText Search Indexes (MySQL/MariaDB only)
+        if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE diagnosis_lookup ADD FULLTEXT(diagnosis_name, diagnosis_code)');
+            DB::statement('ALTER TABLE medicines_lookup ADD FULLTEXT(medicine_name)');
+        }
     }
 
     public function down(): void

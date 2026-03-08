@@ -30,8 +30,12 @@ class AuthController extends Controller
         // specific 'remember' logic handles the checkbox
         $remember = $request->has('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            
+        if (Auth::attempt([
+            'username' => $credentials['username'],
+            'password' => $credentials['password'],
+            'is_active' => true,
+        ], $remember)) {
+
             // 3. Security: Regenerate Session ID
             // (Prevents session fixation attacks)
             $request->session()->regenerate();

@@ -1,11 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController; // Added this import
-use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HouseholdController;
+use App\Http\Controllers\ImmunizationController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UserManagementController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +22,6 @@ use App\Http\Controllers\SearchController;
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'processLogin'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 // --- PROTECTED ROUTES (Only for logged-in users) ---
 Route::middleware('auth')->group(function () {
@@ -31,7 +35,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/medicines', [SearchController::class, 'medicines'])->name('search.medicines');
 
     // 3. PATIENT MANAGEMENT
-    // List Patients
+    // Households (Census)
+    Route::get('/households', [HouseholdController::class, 'index'])
+        ->name('households.index')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::get('/households/create', [HouseholdController::class, 'create'])
+        ->name('households.create')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::post('/households', [HouseholdController::class, 'store'])
+        ->name('households.store')
+        ->middleware('role:Admin,BHW,Nurse');
+
+    // Patients
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
 
     // Create Patient (Order matters: This must be BEFORE {id})
@@ -42,15 +57,65 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{id}', [PatientController::class, 'show'])->name('patients.show');
 
     // 4. CONSULTATION MODULE
+    // Consultation History (list) – must be before /consultations/{id}
+    Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
+
     // Triage / New Admission
     Route::get('/patients/{id}/consultations/create', [ConsultationController::class, 'create'])->name('consultations.create');
     Route::post('/patients/{id}/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
 
     // Doctor's Workspace (View specific consultation)
-    Route::get('/consultations/{id}', [ConsultationController::class, 'show'])->name('consultations.show');
-    
+    Route::get('/consultations/{id}', [ConsultationController::class, 'show'])
+        ->name('consultations.show')
+        ->middleware('role:Admin,Nurse');
+
     // Doctor Actions (Diagnosis & Rx)
-    Route::post('/consultations/{id}/diagnosis', [ConsultationController::class, 'addDiagnosis'])->name('consultations.diagnosis');
-    Route::post('/consultations/{id}/prescription', [ConsultationController::class, 'addPrescription'])->name('consultations.prescription');
+    Route::post('/consultations/{id}/diagnosis', [ConsultationController::class, 'addDiagnosis'])
+        ->name('consultations.diagnosis')
+        ->middleware('role:Admin,Nurse');
+    Route::post('/consultations/{id}/prescription', [ConsultationController::class, 'addPrescription'])
+        ->name('consultations.prescription')
+        ->middleware('role:Admin,Nurse');
+
+    // 5. IMMUNIZATION
+    Route::get('/immunizations', [ImmunizationController::class, 'index'])->name('immunizations.index');
+    Route::get('/patients/{id}/immunizations', [ImmunizationController::class, 'forPatient'])->name('immunizations.patient');
+    Route::post('/immunizations', [ImmunizationController::class, 'store'])->name('immunizations.store');
+
+    // 6. REPORTS (FHSIS)
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::get('/reports/morbidity', [ReportController::class, 'morbidity'])
+        ->name('reports.morbidity')
+        ->middleware('role:Admin,BHW,Nurse');
+    Route::get('/reports/consultation-summary', [ReportController::class, 'consultationSummary'])
+        ->name('reports.consultation-summary')
+        ->middleware('role:Admin,BHW,Nurse');
+
+    // 7. USER MANAGEMENT
+    Route::get('/users', [UserManagementController::class, 'index'])
+        ->name('users.index')
+        ->middleware('role:Admin');
+    Route::get('/users/create', [UserManagementController::class, 'create'])
+        ->name('users.create')
+        ->middleware('role:Admin');
+    Route::post('/users', [UserManagementController::class, 'store'])
+        ->name('users.store')
+        ->middleware('role:Admin');
+    Route::post('/users/{user}/disable', [UserManagementController::class, 'disable'])
+        ->name('users.disable')
+        ->middleware('role:Admin');
+
+    // 8. SETTINGS
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings/account', [SettingsController::class, 'account'])->name('settings.account');
+    Route::post('/settings/account', [SettingsController::class, 'updateAccount'])->name('settings.account.update');
+    Route::get('/settings/backups', [SettingsController::class, 'backups'])
+        ->name('settings.backups')
+        ->middleware('role:Admin');
+    Route::post('/settings/backups/export', [SettingsController::class, 'exportBackup'])
+        ->name('settings.backups.export')
+        ->middleware('role:Admin');
 
 }); // <--- End of Auth Group

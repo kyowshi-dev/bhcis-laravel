@@ -1,21 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-    <div class="md:col-span-1 space-y-6">
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div class="text-center mb-4">
-                <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+    <div class="md:col-span-1 space-y-4 lg:space-y-6">
+        <div class="bg-white p-4 lg:p-6 rounded-xl lg:rounded-lg shadow-sm border border-gray-200">
+            <div class="text-center mb-3 lg:mb-4">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold mx-auto">
                     {{ substr($patient->first_name, 0, 1) }}{{ substr($patient->last_name, 0, 1) }}
                 </div>
-                <h2 class="text-xl font-bold mt-2">{{ $patient->last_name }}, {{ $patient->first_name }}</h2>
-                <p class="text-gray-500 text-sm">ID: {{ str_pad($patient->id, 6, '0', STR_PAD_LEFT) }}</p>
+                <h2 class="text-lg lg:text-xl font-bold mt-2">{{ $patient->last_name }}, {{ $patient->first_name }}</h2>
+                <p class="text-gray-500 text-xs lg:text-sm">ID: PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}</p>
             </div>
 
-            <hr class="my-4">
+            <hr class="my-3 lg:my-4">
 
-            <div class="space-y-3 text-sm">
+            <div class="space-y-2 lg:space-y-3 text-xs lg:text-sm">
                 <div class="flex justify-between">
                     <span class="text-gray-500">Age / Sex:</span>
                     <span class="font-medium">{{ $patient->age }} y/o / {{ $patient->sex }}</span>
@@ -38,9 +37,9 @@
                 </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t">
+            <div class="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t">
                 <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Programs</h4>
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     @if($patient->has_4ps)
                         <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">4Ps Member</span>
                     @endif
@@ -52,58 +51,68 @@
                     @endif
                 </div>
             </div>
+
+            <div class="mt-4 lg:mt-6 pt-3 lg:pt-4 border-t">
+                <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Immunization</h4>
+                <p class="text-xs lg:text-sm text-gray-600 mb-2">{{ $immunizationCount }} dose(s) recorded.</p>
+                <a href="{{ route('immunizations.patient', $patient->id) }}" class="inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs lg:text-sm font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 transition">
+                    View / add immunization
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="md:col-span-2">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800">Consultation History</h2>
-            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm">
-                <a href="{{ route('consultations.create', $patient->id) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm text-sm">
-    		+ New Consultation
-		</a>
-            </button>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 lg:mb-4">
+            <h2 class="text-lg lg:text-xl font-bold text-gray-800">Consultation History</h2>
+            <a href="{{ route('consultations.create', $patient->id) }}" class="inline-flex items-center justify-center bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white px-4 py-2 rounded-xl shadow-sm text-xs lg:text-sm font-medium transition">
+                + New Consultation
+            </a>
         </div>
 
         @if($history->isEmpty())
-            <div class="bg-white p-8 rounded-lg shadow-sm border border-dashed border-gray-300 text-center">
-                <p class="text-gray-400 mb-2">No medical records found for this patient.</p>
-                <p class="text-sm text-gray-500">Click "New Consultation" to create the first record.</p>
+            <div class="bg-white p-6 lg:p-8 rounded-xl lg:rounded-lg shadow-sm border border-dashed border-gray-300 text-center">
+                <p class="text-gray-400 mb-2 text-sm">No medical records found for this patient.</p>
+                <p class="text-xs lg:text-sm text-gray-500">Click "New Consultation" to create the first record.</p>
             </div>
         @else
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-500 font-medium border-b">
-                        <tr>
-                            <th class="px-4 py-3">Date</th>
-                            <th class="px-4 py-3">Complaint</th>
-                            <th class="px-4 py-3">Attended By</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @foreach($history as $record)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3">{{ \Carbon\Carbon::parse($record->created_at)->format('M d, Y') }}</td>
-                            <td class="px-4 py-3 font-medium text-gray-800">{{ $record->complaint_name ?? 'General Checkup' }}</td>
-                            <td class="px-4 py-3">{{ $record->worker_name ?? 'Staff' }}</td>
-                            <td class="px-4 py-3">
-                                <span class="px-2 py-1 rounded-full text-xs 
-                                    {{ $record->status == 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
-                                    {{ ucfirst($record->status) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-right">
-                                <a href="{{ route('consultations.show', $record->id) }}" class="text-green-600 hover:underline font-bold">View</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="bg-white rounded-xl lg:rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs lg:text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-500 font-medium border-b">
+                            <tr>
+                                <th class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">Date</th>
+                                <th class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">Complaint</th>
+                                <th class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap hidden sm:table-cell">Attended By</th>
+                                <th class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">Status</th>
+                                <th class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($history as $record)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-2 lg:px-4 py-2 lg:py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($record->created_at)->format('M d, Y') }}</td>
+                                <td class="px-2 lg:px-4 py-2 lg:py-3 font-medium text-gray-800">
+                                    <div>{{ $record->complaint_name ?? 'General Checkup' }}</div>
+                                    <div class="text-xs text-gray-500 sm:hidden">{{ $record->worker_name ?? 'Staff' }}</div>
+                                </td>
+                                <td class="px-2 lg:px-4 py-2 lg:py-3 hidden sm:table-cell">{{ $record->worker_name ?? 'Staff' }}</td>
+                                <td class="px-2 lg:px-4 py-2 lg:py-3">
+                                    <span class="px-2 py-0.5 lg:py-1 rounded-full text-xs 
+                                        {{ $record->status == 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
+                                        {{ ucfirst($record->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-2 lg:px-4 py-2 lg:py-3 text-right whitespace-nowrap">
+                                    <a href="{{ route('consultations.show', $record->id) }}" class="text-sky-600 hover:text-sky-800 font-semibold text-xs lg:text-sm">View</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @endif
     </div>
-
 </div>
 @endsection
