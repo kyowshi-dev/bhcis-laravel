@@ -5,11 +5,11 @@
     $todayLabel = now()->format('F d, Y');
     $weekdayLabel = now()->format('l');
     $schedule = [
-        ['day' => 'Monday', 'icon' => '🩺', 'label' => 'General Consultation'],
-        ['day' => 'Tuesday', 'icon' => '🩺', 'label' => 'General Consultation'],
-        ['day' => 'Wednesday', 'icon' => '💉', 'label' => 'Immunization'],
-        ['day' => 'Thursday', 'icon' => '🤰', 'label' => 'Prenatal Care'],
-        ['day' => 'Friday', 'icon' => '👶', 'label' => 'Postpartum & FP'],
+        ['day' => 'Monday', 'icon' => 'medical', 'label' => 'General Consultation'],
+        ['day' => 'Tuesday', 'icon' => 'medical', 'label' => 'General Consultation'],
+        ['day' => 'Wednesday', 'icon' => 'medical', 'label' => 'Immunization'],
+        ['day' => 'Thursday', 'icon' => 'medical', 'label' => 'Prenatal Care'],
+        ['day' => 'Friday', 'icon' => 'medical', 'label' => 'Postpartum & FP'],
     ];
 @endphp
 
@@ -24,7 +24,12 @@
              style="background: var(--bg-surface); border-color: var(--border); color: var(--ink-muted); box-shadow: var(--shadow-sm);">
             <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg"
                   style="background: var(--teal-soft); color: var(--primary);">
-                📅
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <path d="M16 2v4"></path>
+                    <path d="M8 2v4"></path>
+                    <path d="M3 10h18"></path>
+                </svg>
             </span>
             <div class="leading-tight">
                 <div class="font-semibold" style="color: var(--ink);">{{ $todayLabel }}</div>
@@ -39,15 +44,17 @@
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Total patients</p>
             <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $totalPatients }}</p>
         </div>
-        <div class="animate-in opacity-0 delay-3 p-5 lg:p-6 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+        <div class="animate-in opacity-0 delay-3 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Pending appointments</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
+            <p class="font-display font-semibold text-xl lg:text-2xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
+            <p class="text-xs mt-2" style="color: var(--ink-muted);">Open queue awaiting review</p>
         </div>
-        <div class="animate-in opacity-0 delay-4 p-5 lg:p-6 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md sm:col-span-2 lg:col-span-1"
+        <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md sm:col-span-2 lg:col-span-1"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Health workers</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $doctorsOnDuty }}</p>
+            <p class="font-display font-semibold text-xl lg:text-2xl" style="color: var(--ink);">{{ $doctorsOnDuty }}</p>
+            <p class="text-xs mt-2" style="color: var(--ink-muted);">Total staff on record</p>
         </div>
     </div>
 
@@ -74,7 +81,11 @@
                                  style="color: var(--ink-muted);">
                                 {{ $slot['day'] }}
                             </div>
-                            <div class="mt-2 text-2xl" aria-hidden="true">{{ $slot['icon'] }}</div>
+                            <div class="mt-2 flex items-center justify-center" aria-hidden="true" style="color: var(--primary);">
+                                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 3h4v4h4v4h-4v4h-4v-4H6V7h4z"></path>
+                                </svg>
+                            </div>
                             <div class="mt-2 text-xs font-semibold leading-snug" style="color: var(--ink);">
                                 {{ $slot['label'] }}
                             </div>
@@ -97,7 +108,17 @@
                             {{ $activity }}
                         </li>
                     @empty
-                        <li class="py-6 text-sm text-center" style="color: var(--ink-muted);">No recent activity.</li>
+                        <li class="py-8 px-4 text-center">
+                            <div class="space-y-2">
+                                <div class="text-sm" style="color: var(--ink-muted);">No recent activity yet.</div>
+                                <div class="text-xs" style="color: var(--ink-subtle);">Add a patient to see updates here.</div>
+                                <a href="{{ route('patients.create') }}"
+                                   class="inline-flex items-center justify-center w-full px-3 py-2 rounded-xl text-xs font-semibold transition-[transform,box-shadow,background] duration-200 hover:shadow-md hover:scale-[1.01] active:scale-[0.98]"
+                                   style="background: var(--primary); color: #fff; box-shadow: var(--shadow-sm);">
+                                    Add your first patient
+                                </a>
+                            </div>
+                        </li>
                     @endforelse
                 </ul>
             </div>

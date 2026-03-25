@@ -102,33 +102,70 @@
                 @endphp
 
                 <a href="{{ route('dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">📋</span> <span>Dashboard</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                        <path d="M5 7h14v14H5z"></path>
+                        <path d="M9 11h6"></path>
+                    </svg>
+                    <span>Dashboard</span>
                 </a>
                 <a href="{{ route('households.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">🏠</span> <span>Households</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 10.5 12 3l9 7.5"></path>
+                        <path d="M5 10v11h14V10"></path>
+                        <path d="M10 21v-7h4v7"></path>
+                    </svg>
+                    <span>Households</span>
                 </a>
                 <a href="{{ url('/patients') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">👥</span> <span>Patients</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Patients</span>
                 </a>
                 <a href="{{ route('consultations.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">🩺</span> <span>Consultations</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                        <path d="M8 8l6 6"></path>
+                        <path d="M14 8l-6 6"></path>
+                    </svg>
+                    <span>Consultations</span>
                 </a>
                 <a href="{{ route('immunizations.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">💉</span> <span>Immunization</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M10 3h4v4h4v4h-4v4h-4v-4H6V7h4z"></path>
+                    </svg>
+                    <span>Immunization</span>
                 </a>
                 @if ($authUser && $authUser->hasRole('Admin', 'BHW', 'Nurse'))
                     <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                        <span class="text-base opacity-70">📊</span> <span>Reports</span>
+                        <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 3v18h18"></path>
+                            <path d="M7 14l2-2 3 3 5-5"></path>
+                        </svg>
+                        <span>Reports</span>
                     </a>
                 @endif
 
                 @if ($authUser && $authUser->isAdmin())
                     <a href="{{ route('users.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                        <span class="text-base opacity-70">👤</span> <span>Users</span>
+                        <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Users</span>
                     </a>
                 @endif
                 <a href="{{ route('settings.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <span class="text-base opacity-70">⚙️</span> <span>Settings</span>
+                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 0 0 2.572-1.065z"></path>
+                        <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+                    </svg>
+                    <span>Settings</span>
                 </a>
             </nav>
         </aside>
@@ -140,21 +177,62 @@
                 </button>
                 <div class="ml-auto flex items-center gap-4">
                     @if ($authUser)
-                        <div class="hidden sm:flex flex-col items-end text-xs leading-tight">
-                            <span class="font-semibold" style="color: var(--ink);">
-                                {{ $authUser->username }}
-                            </span>
-                            <span style="color: var(--ink-muted);">
-                                Role: {{ $authUser->roleName() ?? 'Unassigned' }}
-                            </span>
+                        @php
+                            $roleName = $authUser->roleName() ?? 'Unassigned';
+                            $username = (string) $authUser->username;
+                            $initials = mb_strtoupper(mb_substr($username, 0, 1));
+                        @endphp
+                        <div x-data="{ profileOpen: false }" class="relative">
+                            <button type="button"
+                                    @click="profileOpen = !profileOpen"
+                                    @click.away="profileOpen = false"
+                                    class="flex items-center gap-3 rounded-xl border px-3 py-2 hover:shadow-sm transition-[background,transform,box-shadow] duration-200"
+                                    style="background: var(--bg-surface); border-color: var(--border); color: var(--ink-muted);">
+                                <span class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                                      style="background: var(--teal-soft); color: var(--primary);">
+                                    {{ $initials }}
+                                </span>
+                                <span class="hidden sm:block text-left leading-tight">
+                                    <span class="block text-sm font-semibold" style="color: var(--ink);">
+                                        {{ $username }}
+                                    </span>
+                                    <span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                                          style="background: var(--teal-soft); color: var(--primary);">
+                                        {{ $roleName }}
+                                    </span>
+                                </span>
+                                <svg class="w-4 h-4 hidden sm:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M6 9l6 6 6-6"></path>
+                                </svg>
+                            </button>
+
+                            <div x-show="profileOpen"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 transform translate-y-1"
+                                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                                 x-transition:leave-end="opacity-0 transform translate-y-1"
+                                 class="absolute right-0 mt-3 w-52 rounded-xl border shadow-lg z-50"
+                                 style="background: var(--bg-surface-elevated); border-color: var(--border); box-shadow: var(--shadow-md);">
+                                <div class="px-4 py-3 text-xs" style="color: var(--ink-muted); border-bottom: 1px solid var(--border);">
+                                    <div class="font-semibold" style="color: var(--ink);">{{ $username }}</div>
+                                    <div>{{ $roleName }}</div>
+                                </div>
+
+                                <div class="p-3">
+                                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                                        @csrf
+                                        <button type="submit"
+                                                class="w-full inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-[background,transform] duration-200 hover:bg-black/5 active:scale-[0.98]"
+                                                style="background: transparent; color: var(--ink); border: 1px solid var(--border);">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     @endif
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-[background,transform] duration-200 hover:scale-[1.02] active:scale-[0.98]" style="background: var(--accent); box-shadow: var(--shadow-sm);">
-                            Logout
-                        </button>
-                    </form>
                 </div>
             </header>
 
