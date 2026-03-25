@@ -95,7 +95,6 @@
                 </button>
             </div>
 
-<<<<<<< HEAD
             <nav class="flex-1 p-3 space-y-0.5 overflow-y-auto">
                 @php
                     /** @var \App\Models\User|null $authUser */
@@ -186,69 +185,6 @@
             var current = window.location.pathname.replace(/\/$/, '') || '/';
             if (path === current) link.classList.add('router-link-active');
         });
-=======
-                <a href="#" class="flex items-center px-3 py-3 rounded-md hover:bg-green-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                    <span class="ml-3 sidebar-text whitespace-nowrap transition-opacity duration-300">Consultations</span>
-                </a>
-
-            </nav>
-
-            <div class="border-t border-green-600 p-4">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center px-1 py-2 text-green-100 hover:text-white hover:bg-green-600 rounded-md transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span class="ml-3 sidebar-text whitespace-nowrap transition-opacity duration-300">Logout</span>
-                    </button>
-                </form>
-            </div>
-        </aside>
-
-        <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50">
-            <header class="h-16 bg-white shadow-sm flex items-center px-6 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-800">Sta. Ana Health Center</h2>
-            </header>
-
-            <div class="flex-1 overflow-y-auto p-6">
-                @yield('content')
-            </div>
-        </main>
-
-    </div>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const texts = document.querySelectorAll('.sidebar-text');
-            const logoText = document.getElementById('logo-text');
-            
-            // Toggle the width of the sidebar
-            if (sidebar.classList.contains('w-64')) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20'); // Collapsed width
-                
-                // Hide text
-                logoText.classList.add('opacity-0', 'hidden');
-                texts.forEach(text => {
-                    text.classList.add('opacity-0', 'hidden');
-                });
-            } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64'); // Expanded width
-                
-                // Show text
-                logoText.classList.remove('opacity-0', 'hidden');
-                texts.forEach(text => {
-                    text.classList.remove('opacity-0', 'hidden');
-                });
-            }
-        }
->>>>>>> 1c8ef6da3b73bbfb3c5e5a4276720419b477f5d7
     </script>
 </body>
 </html>
