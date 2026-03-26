@@ -80,4 +80,52 @@ class UserManagementController extends Controller
             ->route('users.index')
             ->with('success', 'User disabled successfully.');
     }
+
+    public function enable(Request $request, User $user)
+    {
+        // Validate password confirmation
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        if ($user->is_active) {
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User is already enabled.');
+        }
+
+        $user->is_active = true;
+        $user->save();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User enabled successfully.');
+    }
+
+    public function destroy(Request $request, User $user)
+    {
+        // Only admins can delete users
+        if (! auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Prevent self-deletion
+        if ($user->id === auth()->id()) {
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'You cannot delete your own account.');
+        }
+
+        // Validate password confirmation
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        // Delete the user (this will cascade delete health_worker due to foreign key constraint)
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User deleted successfully.');
+    }
 }

@@ -107,6 +107,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/disable', [UserManagementController::class, 'disable'])
         ->name('users.disable')
         ->middleware('role:Admin');
+    Route::post('/users/{user}/enable', [UserManagementController::class, 'enable'])
+        ->name('users.enable')
+        ->middleware('role:Admin');
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])
+        ->name('users.destroy')
+        ->middleware('role:Admin');
 
     // 8. SETTINGS
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

@@ -58,12 +58,23 @@
                             </td>
                             <td class="px-3 lg:px-6 py-2 lg:py-3 text-sm text-right">
                                 @if ($user->is_active)
+                                    <form action="{{ route('users.disable', $user) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-red-300 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+                                            onclick="return confirm('Are you sure you want to disable this user?');"
+                                        >
+                                            Disable
+                                        </button>
+                                    </form>
+                                @else
                                     <button
                                         type="button"
-                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-red-300 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
-                                        onclick="openDisableModal({{ $user->id }}, '{{ $user->username }}')"
+                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-emerald-300 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 transition"
+                                        onclick="openEnableModal({{ $user->id }}, '{{ $user->username }}')"
                                     >
-                                        Disable
+                                        Enable
                                     </button>
                                 @endif
                                 @if (auth()->user()->isAdmin() && $user->id !== auth()->id())
@@ -147,6 +158,58 @@
     </div>
 </div>
 
+<!-- Enable Confirmation Modal -->
+<div id="enableModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" style="display: none;">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm User Enable</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    You are about to re-enable user <strong id="enableUsername"></strong>.
+                    They will regain access to the system.
+                </p>
+
+                <form id="enableForm" method="POST">
+                    @csrf
+
+                    <div class="mb-4">
+                        <label for="enablePassword" class="block text-sm font-medium text-gray-700 mb-1">
+                            Enter your password to confirm
+                        </label>
+                        <input
+                            type="password"
+                            id="enablePassword"
+                            name="password"
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
+                            placeholder="Your password"
+                        >
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            type="button"
+                            onclick="closeEnableModal()"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-lg hover:bg-emerald-700 transition"
+                        >
+                            Enable User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function openDeleteModal(userId, username) {
     document.getElementById('deleteUsername').textContent = username;
@@ -160,10 +223,28 @@ function closeDeleteModal() {
     document.getElementById('deleteForm').reset();
 }
 
+function openEnableModal(userId, username) {
+    document.getElementById('enableUsername').textContent = username;
+    document.getElementById('enableForm').action = `/users/${userId}/enable`;
+    document.getElementById('enableModal').style.display = 'flex';
+    document.getElementById('enablePassword').focus();
+}
+
+function closeEnableModal() {
+    document.getElementById('enableModal').style.display = 'none';
+    document.getElementById('enableForm').reset();
+}
+
 // Close modal when clicking outside
 document.getElementById('deleteModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeDeleteModal();
+    }
+});
+
+document.getElementById('enableModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEnableModal();
     }
 });
 </script>
