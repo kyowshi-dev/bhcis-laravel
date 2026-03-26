@@ -148,6 +148,15 @@
                     </svg>
                     <span>Immunization</span>
                 </a>
+                @if ($authUser && $authUser->hasRole('Admin', 'Nurse'))
+                    <a href="{{ route('medicines.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
+                        <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M10.5 6h2.25v.75h-2.25V6zm0 3h2.25v.75h-2.25V9zm0 3h2.25v.75h-2.25v-.75z"></path>
+                            <path d="M17 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"></path>
+                        </svg>
+                        <span>Medicines</span>
+                    </a>
+                @endif
                 @if ($authUser && $authUser->hasRole('Admin', 'BHW', 'Nurse'))
                     <a href="{{ route('reports.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
                         <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

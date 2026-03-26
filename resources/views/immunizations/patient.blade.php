@@ -102,10 +102,6 @@
                     </select>
                 </div>
                 <div>
-                    <label for="batch_number" class="block text-xs font-medium mb-1" style="color: var(--ink-muted);">Batch / lot number</label>
-                    <input type="text" id="batch_number" name="batch_number" value="{{ old('batch_number') }}" maxlength="100" class="w-full rounded-lg border py-2 px-3 text-sm focus:outline-none focus:ring-2 transition" style="border-color: var(--border); color: var(--ink); --tw-ring-color: var(--primary);">
-                </div>
-                <div>
                     <label for="next_due_date" class="block text-xs font-medium mb-1" style="color: var(--ink-muted);">Next due date</label>
                     <input type="date" id="next_due_date" name="next_due_date" value="{{ old('next_due_date') }}" class="w-full rounded-lg border py-2 px-3 text-sm focus:outline-none focus:ring-2 transition" style="border-color: var(--border); color: var(--ink); --tw-ring-color: var(--primary);">
                 </div>

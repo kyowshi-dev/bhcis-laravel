@@ -5,6 +5,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HouseholdController;
 use App\Http\Controllers\ImmunizationController;
+use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
@@ -114,12 +115,44 @@ Route::middleware('auth')->group(function () {
         ->name('users.destroy')
         ->middleware('role:Admin');
 
-    // 8. SETTINGS
+    // 8. MEDICINE MANAGEMENT
+    Route::get('/medicines', [MedicineController::class, 'index'])
+        ->name('medicines.index')
+        ->middleware('role:Admin,Nurse');
+    Route::get('/medicines/create', [MedicineController::class, 'create'])
+        ->name('medicines.create')
+        ->middleware('role:Admin,Nurse');
+    Route::post('/medicines', [MedicineController::class, 'store'])
+        ->name('medicines.store')
+        ->middleware('role:Admin,Nurse');
+    Route::post('/medicines/import', [MedicineController::class, 'import'])
+        ->name('medicines.import')
+        ->middleware('role:Admin,Nurse');
+    Route::get('/medicines/{id}', [MedicineController::class, 'show'])
+        ->name('medicines.show')
+        ->middleware('role:Admin,Nurse');
+    Route::get('/medicines/{id}/edit', [MedicineController::class, 'edit'])
+        ->name('medicines.edit')
+        ->middleware('role:Admin,Nurse');
+    Route::put('/medicines/{id}', [MedicineController::class, 'update'])
+        ->name('medicines.update')
+        ->middleware('role:Admin,Nurse');
+    Route::delete('/medicines/{id}', [MedicineController::class, 'destroy'])
+        ->name('medicines.destroy')
+        ->middleware('role:Admin');
+
+    // 9. SETTINGS
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('/settings/account', [SettingsController::class, 'account'])->name('settings.account');
     Route::post('/settings/account', [SettingsController::class, 'updateAccount'])->name('settings.account.update');
     Route::get('/settings/backups', [SettingsController::class, 'backups'])
         ->name('settings.backups')
+        ->middleware('role:Admin');
+    Route::post('/settings/backups/export', [SettingsController::class, 'exportBackup'])
+        ->name('settings.backups.export')
+        ->middleware('role:Admin');
+    Route::post('/settings/backups/import', [SettingsController::class, 'importBackup'])
+        ->name('settings.backups.import')
         ->middleware('role:Admin');
     Route::post('/settings/backups/export', [SettingsController::class, 'exportBackup'])
         ->name('settings.backups.export')
