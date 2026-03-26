@@ -17,10 +17,12 @@ class DashboardController extends Controller
 
         $today = Carbon::today();
 
+        // FIXED: Using distinct() chained with count() for proper Laravel Query Builder syntax
         $overdueImmunizations = DB::table('immunization_records')
             ->whereNotNull('next_due_date')
             ->whereDate('next_due_date', '<', $today)
-            ->count(DB::raw('distinct patient_id'));
+            ->distinct('patient_id')
+            ->count('patient_id');
 
         $followUpConsultationsToday = DB::table('consultations')
             ->whereDate('created_at', $today)

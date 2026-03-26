@@ -48,12 +48,12 @@
                 Household Information
             </h3>
             
-            <div x-data="householdAutocomplete({
-                    initialId: {{ old('household_id') ? (int) old('household_id') : 'null' }},
-                    initialText: @json($selectedHousehold?->family_name_head ?? ''),
-                    transientId: {{ $transientHouseholdId ?? 'null' }},
-                    transientLabel: @json($transientHouseholdLabel ?? 'Transient/Unmapped')
-                })"
+            <div x-data='householdAutocomplete({
+                    initialId: @json($selectedHouseholdId ? (int) $selectedHouseholdId : null),
+                    initialText: @json($selectedHousehold?->family_name_head ?? ""),
+                    transientId: @json($transientHouseholdId ?? null),
+                    transientLabel: @json($transientHouseholdLabel ?? "Transient/Unmapped")
+                })'
                  x-init="init()">
                 <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
                     Select Household <span class="text-red-500">*</span>

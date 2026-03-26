@@ -38,7 +38,7 @@ class PatientController extends Controller
     // 2. Show the Registration Form
     public function create(Request $request)
     {
-        $selectedHouseholdId = $request->old('household_id');
+        $selectedHouseholdId = $request->old('household_id') ?? $request->input('household_id');
 
         $transientHousehold = DB::table('households')
             ->where(function ($qb) {
@@ -58,6 +58,7 @@ class PatientController extends Controller
         }
 
         return view('patients.create', [
+            'selectedHouseholdId' => $selectedHouseholdId,
             'transientHouseholdId' => $transientHousehold?->id,
             'transientHouseholdLabel' => $transientHousehold?->family_name_head,
             'selectedHousehold' => $selectedHousehold,

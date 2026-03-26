@@ -40,7 +40,7 @@ class HouseholdController extends Controller
         $data = $request->validate([
             'zone_id' => ['required', 'integer', 'exists:zones,id'],
             'family_name_head' => ['required', 'string', 'max:255'],
-            'contact_number' => ['nullable', 'string', 'max:32'],
+            'contact_number' => ['nullable', 'string', 'max:32', 'regex:/^[0-9+\\-\\s()]*$/'],
         ]);
 
         DB::table('households')->insert([

@@ -75,10 +75,16 @@
                             <td class="px-3 lg:px-4 py-2.5 lg:py-3" style="color: var(--ink-muted);">
                                 {{ optional($household->created_at)->format('M d, Y') }}
                             </td>
+                            <td class="px-3 lg:px-4 py-2.5 lg:py-3 text-right whitespace-nowrap">
+                                <a href="{{ route('patients.create', ['household_id' => $household->id]) }}"
+                                   class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-700 border border-sky-200 hover:bg-sky-100 transition">
+                                    Add member
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-5 text-center text-sm" style="color: var(--ink-muted);">
+                            <td colspan="5" class="px-4 py-5 text-center text-sm" style="color: var(--ink-muted);">
                                 No households registered yet.
                             </td>
                         </tr>

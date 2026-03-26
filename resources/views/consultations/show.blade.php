@@ -19,9 +19,9 @@
 
     <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex flex-wrap items-center gap-2 lg:gap-3">
-            <a href="{{ route('consultations.index') }}" class="text-xs lg:text-sm font-medium text-sky-600 hover:text-sky-800">← History</a>
+            <a href="{{ route('patients.show', $patient->id) }}" class="text-xs lg:text-sm font-medium text-sky-600 hover:text-sky-800">← Back to patient</a>
             <span class="text-gray-300 hidden sm:inline">|</span>
-            <a href="{{ route('patients.show', $patient->id) }}" class="text-xs lg:text-sm font-medium text-sky-600 hover:text-sky-800">Patient</a>
+            <a href="{{ route('consultations.index') }}" class="text-xs lg:text-sm font-medium text-sky-600 hover:text-sky-800">History</a>
         </div>
         <span class="inline-flex items-center px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs font-semibold
             @if ($consultation->status === 'completed') bg-emerald-100 text-emerald-700

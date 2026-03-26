@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,18 +22,29 @@ class SearchController extends Controller
         // Search by Last Name OR First Name
         // We limit to 10 results for speed
         $patients = DB::table('patients')
-            ->where('last_name', 'LIKE', "{$query}%")
-            ->orWhere('first_name', 'LIKE', "{$query}%")
+            ->where(function ($qb) use ($query) {
+                $qb->where('last_name', 'LIKE', "{$query}%")
+                    ->orWhere('first_name', 'LIKE', "{$query}%");
+            })
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->distinct()
             ->select('id', 'first_name', 'last_name', 'sex', 'date_of_birth')
             ->limit(10)
             ->get();
 
         // Format the results for the frontend
         $results = $patients->map(function ($patient) {
+            $ptCode = 'PT'.str_pad((string) $patient->id, 3, '0', STR_PAD_LEFT);
+            $age = null;
+            if (! empty($patient->date_of_birth)) {
+                $age = Carbon::parse($patient->date_of_birth)->age;
+            }
+
             return [
                 'id' => $patient->id,
-                'text' => $patient->last_name.', '.$patient->first_name, // What shows in the dropdown
-                'subtext' => $patient->sex.' | '.$patient->date_of_birth, // Extra info
+                'text' => trim((string) $patient->last_name).', '.trim((string) $patient->first_name), // What shows in the dropdown
+                'subtext' => $ptCode.' | '.trim((string) $patient->sex).($age !== null ? ' | '.$age.' y/o' : '').' | '.$patient->date_of_birth, // Extra info
             ];
         });
 
@@ -112,7 +124,10 @@ class SearchController extends Controller
                     ->orWhere('zones.zone_number', 'LIKE', "%{$query}%")
                     ->orWhere('households.contact_number', 'LIKE', "%{$query}%");
             })
+            ->distinct()
             ->select('households.id', 'households.family_name_head', 'zones.zone_number', 'households.contact_number')
+            ->orderBy('zones.zone_number')
+            ->orderBy('households.family_name_head')
             ->limit(15)
             ->get();
 
@@ -122,7 +137,7 @@ class SearchController extends Controller
             return [
                 'id' => $h->id,
                 'text' => (string) $h->family_name_head,
-                'subtext' => 'Zone '.$h->zone_number.($contact ? ' | '.$contact : ''),
+                'subtext' => 'Zone '.$h->zone_number.' | Household #'.$h->id.($contact ? ' | '.$contact : ''),
             ];
         });
 
