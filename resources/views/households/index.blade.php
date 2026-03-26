@@ -54,6 +54,10 @@
                             style="color: var(--ink-muted);">
                             Registered at
                         </th>
+                        <th class="px-3 lg:px-4 py-2.5 lg:py-3 text-right font-semibold uppercase tracking-wide"
+                            style="color: var(--ink-muted);">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
