@@ -166,7 +166,7 @@
                             </div>
                             <div class="min-w-0">
                                 <div class="text-sm font-semibold truncate" style="color: var(--ink);">{{ $staff['name'] }}</div>
-                                <div class="text-xs truncate" style="color: var(--ink-muted);">{{ $staff['position'] }}</div>
+                                <div class="text-xs truncate" style="color: var(--ink-muted);">{{ $staff['role'] }}</div>
                             </div>
                         </div>
                     @empty

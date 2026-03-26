@@ -32,7 +32,7 @@ class DashboardController extends Controller
         $doctorsOnDuty = DB::table('health_workers')->count();
 
         $onDutyStaff = DB::table('health_workers')
-            ->select('first_name', 'last_name', 'position')
+            ->select('first_name', 'last_name', 'role')
             ->orderBy('last_name')
             ->limit(5)
             ->get()
@@ -41,7 +41,7 @@ class DashboardController extends Controller
 
                 return [
                     'name' => trim($row->first_name.' '.$row->last_name),
-                    'position' => (string) $row->position,
+                    'role' => (string) $row->role,
                     'initials' => $initials,
                 ];
             })

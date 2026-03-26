@@ -70,7 +70,12 @@
                                 @if ($patient->last_visit) {{ \Carbon\Carbon::parse($patient->last_visit)->format('Y-m-d') }} @else — @endif
                             </td>
                             <td class="px-4 py-2.5">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" style="background: var(--teal-soft); color: var(--primary);">Active</span>
+                                @php
+                                    $isActive = !empty($patient->last_visit);
+                                    $statusLabel = $isActive ? 'Active' : 'Inactive';
+                                    $statusColor = $isActive ? 'var(--primary)' : 'var(--ink-muted)';
+                                @endphp
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" style="background: var(--teal-soft); color: {{ $statusColor }};">{{ $statusLabel }}</span>
                             </td>
                             <td class="px-4 py-2.5 text-right whitespace-nowrap">
                                 <a href="{{ route('patients.show', $patient->id) }}" class="font-semibold text-sm transition-colors hover:underline" style="color: var(--primary);">View</a>

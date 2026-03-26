@@ -73,7 +73,7 @@
                                 {{ $household->contact_number ?: '—' }}
                             </td>
                             <td class="px-3 lg:px-4 py-2.5 lg:py-3" style="color: var(--ink-muted);">
-                                {{ optional($household->created_at)->format('M d, Y') }}
+                                {{ $household->created_at ? \Illuminate\Support\Carbon::parse($household->created_at)->format('M d, Y') : '—' }}
                             </td>
                             <td class="px-3 lg:px-4 py-2.5 lg:py-3 text-right whitespace-nowrap">
                                 <a href="{{ route('patients.create', ['household_id' => $household->id]) }}"

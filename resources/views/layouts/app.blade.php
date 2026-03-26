@@ -20,12 +20,18 @@
             --ink-muted: #5c6560;
             --ink-subtle: #8a928d;
             --border: rgba(26, 31, 28, 0.12);
+            
+            /* Primary Colors (Dark Green, Hue: 166) */
             --primary: #0d4a3c;
             --primary-hover: #0a3d32;
-            --accent: #c45c41;
-            --accent-hover: #a84d36;
-            --accent-soft: rgba(196, 92, 65, 0.12);
             --teal-soft: rgba(13, 74, 60, 0.08);
+
+            /* Accent Colors (Lighter Green, Exact same Hue: 166) */
+            --accent: #0d4a3c; 
+            --accent-hover: #0a3d32;
+        --accent-soft: rgba(31, 181, 146, 0.12);
+            
+            /* Shadows & UI Settings */
             --shadow-sm: 0 1px 2px rgba(26, 31, 28, 0.06);
             --shadow-md: 0 4px 12px rgba(26, 31, 28, 0.08);
             --shadow-lg: 0 12px 32px rgba(26, 31, 28, 0.1);
@@ -34,6 +40,7 @@
             --radius-xl: 1rem;
             --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .grain::before {
             content: '';
             position: absolute;
@@ -83,7 +90,7 @@
     <div class="relative z-10 flex min-h-screen" x-data="{ sidebarOpen: false }">
         <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-40 bg-black/40 lg:hidden" style="display: none;"></div>
 
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="fixed lg:static inset-y-0 left-0 w-64 shrink-0 flex flex-col z-50 transition-transform duration-300 ease-out border-r border-[var(--border)]" style="background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="sticky lg:sticky top-0 h-screen lg:h-screen overflow-y-auto w-64 shrink-0 flex flex-col z-50 transition-transform duration-300 ease-out border-r border-[var(--border)]" style="background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
             <div class="flex items-center justify-between p-4 lg:p-5 border-b border-[var(--border)]">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
                     <span class="flex h-9 w-9 items-center justify-center rounded-lg text-white font-display font-semibold text-sm" style="background: var(--primary);">B</span>

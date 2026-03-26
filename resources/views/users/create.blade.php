@@ -21,6 +21,40 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             <div>
+                <label for="first_name" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    First Name <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    value="{{ old('first_name') }}"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                @error('first_name')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="last_name" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Last Name <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    value="{{ old('last_name') }}"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    required
+                >
+                @error('last_name')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
                 <label for="role_id" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
                     Role <span class="text-red-500">*</span>
                 </label>
@@ -72,6 +106,23 @@
                     required
                 >
                 @error('email')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="contact_number" class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Contact Number
+                </label>
+                <input
+                    type="text"
+                    id="contact_number"
+                    name="contact_number"
+                    value="{{ old('contact_number') }}"
+                    class="block w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm"
+                    placeholder="0912-345-6789"
+                >
+                @error('contact_number')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                 @enderror
             </div>
