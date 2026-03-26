@@ -51,6 +51,9 @@ class ImmunizationController extends Controller
 
         $patient->age = \Carbon\Carbon::parse($patient->date_of_birth)->age;
 
+        $isChild = $patient->age < 18;
+        $allowedCategories = $isChild ? ['Child', 'Both'] : ['Adult', 'Both'];
+
         $records = DB::table('immunization_records')
             ->join('vaccines_lookup', 'immunization_records.vaccine_id', '=', 'vaccines_lookup.id')
             ->leftJoin('health_workers', 'immunization_records.administered_by', '=', 'health_workers.id')
@@ -64,7 +67,10 @@ class ImmunizationController extends Controller
             ->orderByDesc('immunization_records.date_given')
             ->get();
 
-        $vaccines = DB::table('vaccines_lookup')->orderBy('sort_order')->get();
+        $vaccines = DB::table('vaccines_lookup')
+            ->whereIn('category', $allowedCategories)
+            ->orderBy('sort_order')
+            ->get();
         $healthWorkers = DB::table('health_workers')
             ->orderBy('last_name')
             ->get();
@@ -85,12 +91,24 @@ class ImmunizationController extends Controller
             'dose_number' => ['required', 'integer', 'min:1', 'max:99'],
             'date_given' => ['required', 'date', 'before_or_equal:today'],
             'administered_by' => ['nullable', 'integer', 'exists:health_workers,id'],
-            'batch_number' => ['nullable', 'string', 'max:100'],
             'next_due_date' => ['nullable', 'date'],
             'notes' => ['nullable', 'string', 'max:500'],
         ], [
             'date_given.before_or_equal' => 'Date given cannot be in the future.',
         ]);
+
+        // Get patient and vaccine for age check
+        $patient = DB::table('patients')->where('id', $validated['patient_id'])->first();
+        $age = \Carbon\Carbon::parse($patient->date_of_birth)->age;
+        $isChild = $age < 18;
+        $allowedCategories = $isChild ? ['Child', 'Both'] : ['Adult', 'Both'];
+
+        $vaccine = DB::table('vaccines_lookup')->where('id', $validated['vaccine_id'])->first();
+        if (! in_array($vaccine->category, $allowedCategories)) {
+            return back()
+                ->withErrors(['vaccine_id' => 'This vaccine is not appropriate for the patient\'s age group.'])
+                ->withInput();
+        }
 
         DB::table('immunization_records')->insert([
             'patient_id' => $validated['patient_id'],
@@ -98,7 +116,6 @@ class ImmunizationController extends Controller
             'dose_number' => $validated['dose_number'],
             'date_given' => $validated['date_given'],
             'administered_by' => $validated['administered_by'] ?? null,
-            'batch_number' => $validated['batch_number'] ?? null,
             'next_due_date' => $validated['next_due_date'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'created_at' => now(),
