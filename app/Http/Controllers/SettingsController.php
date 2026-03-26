@@ -87,19 +87,33 @@ class SettingsController extends Controller
                 '--skip-lock-tables',
                 $conn['database'],
             ];
+
+            // Handle password securely
             $env = [];
             if (! empty($conn['password'])) {
                 $env['MYSQL_PWD'] = $conn['password'];
             }
+
             $process = new Process($command, null, $env);
-            $process->setTimeout(120);
+            $process->setTimeout(300); // 5 minutes timeout
             $process->run();
+
             if (! $process->isSuccessful()) {
+                $error = $process->getErrorOutput();
+
                 return redirect()
                     ->route('settings.backups')
-                    ->with('error', 'Backup failed. Ensure mysqldump is installed and credentials are correct.');
+                    ->with('error', 'Backup failed: '.$error.'. Ensure mysqldump is installed and database credentials are correct.');
             }
-            Storage::put($filename, $process->getOutput());
+
+            $sqlContent = $process->getOutput();
+            if (empty($sqlContent)) {
+                return redirect()
+                    ->route('settings.backups')
+                    ->with('error', 'Backup completed but no data was exported. Check database connection.');
+            }
+
+            Storage::put($filename, $sqlContent);
             $path = storage_path('app/'.$filename);
             $response = response()->download($path, $filename, [
                 'Content-Type' => 'application/sql',
@@ -112,5 +126,108 @@ class SettingsController extends Controller
         return redirect()
             ->route('settings.backups')
             ->with('error', 'Unsupported database driver for export.');
+    }
+
+    public function importBackup(Request $request)
+    {
+        $request->validate([
+            'backup_file' => ['required', 'file', 'max:51200'], // 50MB max
+        ]);
+
+        $driver = config('database.default');
+        $file = $request->file('backup_file');
+
+        if ($driver === 'sqlite') {
+            // For SQLite, replace the entire database file
+            $dbPath = config('database.connections.sqlite.database');
+            $dbDir = dirname($dbPath);
+
+            // Create backup of current database
+            if (file_exists($dbPath)) {
+                $backupPath = $dbPath.'.backup.'.now()->format('Y-m-d-His');
+                if (! copy($dbPath, $backupPath)) {
+                    return redirect()
+                        ->route('settings.backups')
+                        ->with('error', 'Failed to create backup of current database.');
+                }
+            }
+
+            // Move uploaded file to database location
+            try {
+                $file->move($dbDir, basename($dbPath));
+
+                return redirect()
+                    ->route('settings.backups')
+                    ->with('success', 'Database imported successfully. A backup of the previous database was created.');
+            } catch (\Exception $e) {
+                return redirect()
+                    ->route('settings.backups')
+                    ->with('error', 'Failed to import database: '.$e->getMessage());
+            }
+        }
+
+        if (in_array($driver, ['mysql', 'mariadb'], true)) {
+            // For MySQL/MariaDB, use mysql command to import SQL file
+            $conn = config('database.connections.'.$driver);
+            $sqlContent = file_get_contents($file->getRealPath());
+
+            if (empty($sqlContent)) {
+                return redirect()
+                    ->route('settings.backups')
+                    ->with('error', 'The uploaded file is empty or invalid.');
+            }
+
+            // Create backup of current database first
+            $backupFilename = 'bhcis-backup-pre-import-'.now()->format('Y-m-d-His').'.sql';
+            $backupCommand = [
+                'mysqldump',
+                '-h', $conn['host'],
+                '-P', (string) $conn['port'],
+                '-u', $conn['username'],
+                '--single-transaction',
+                '--quick',
+                '--skip-lock-tables',
+                $conn['database'],
+            ];
+            $env = [];
+            if (! empty($conn['password'])) {
+                $env['MYSQL_PWD'] = $conn['password'];
+            }
+            $backupProcess = new Process($backupCommand, null, $env);
+            $backupProcess->setTimeout(120);
+            $backupProcess->run();
+
+            if ($backupProcess->isSuccessful()) {
+                Storage::put($backupFilename, $backupProcess->getOutput());
+            }
+
+            // Now import the new database
+            $importCommand = [
+                'mysql',
+                '-h', $conn['host'],
+                '-P', (string) $conn['port'],
+                '-u', $conn['username'],
+                $conn['database'],
+            ];
+
+            $importProcess = new Process($importCommand, null, $env);
+            $importProcess->setInput($sqlContent);
+            $importProcess->setTimeout(300); // 5 minutes timeout for import
+            $importProcess->run();
+
+            if (! $importProcess->isSuccessful()) {
+                return redirect()
+                    ->route('settings.backups')
+                    ->with('error', 'Import failed. A backup was created before import. Error: '.$importProcess->getErrorOutput());
+            }
+
+            return redirect()
+                ->route('settings.backups')
+                ->with('success', 'Database imported successfully. A backup of the previous database was created.');
+        }
+
+        return redirect()
+            ->route('settings.backups')
+            ->with('error', 'Unsupported database driver for import.');
     }
 }
