@@ -102,11 +102,20 @@
                         No consultations for this period.
                     </p>
                 @else
+                    @php
+                        $graphColors = [
+                            // Use more opaque fills so the per-program differences are visible.
+                            'rgba(13, 74, 60, 0.82)',
+                            'rgba(31, 181, 146, 0.82)',
+                            'rgba(26, 31, 28, 0.55)',
+                        ];
+                    @endphp
                     <div class="space-y-3">
                         @foreach ($programs as $program)
                             @php
                                 $label = $program['label'];
                                 $width = $maxCount > 0 ? max(6, (int) floor(($program['count'] / $maxCount) * 100)) : 0;
+                                $color = $graphColors[$loop->index % count($graphColors)];
                             @endphp
                             <div>
                                 <div class="flex items-center justify-between text-xs">
@@ -117,7 +126,7 @@
                                 </div>
                                 <div class="mt-1 h-1.5 rounded-full" style="background: rgba(0,0,0,0.05);">
                                     <div class="h-full rounded-full"
-                                         style="width: {{ $width }}%; background: var(--teal-soft);"></div>
+                                         style="width: {{ $width }}%; background: {{ $color }};"></div>
                                 </div>
                             </div>
                         @endforeach

@@ -37,7 +37,7 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
         <div class="lg:col-span-2">
             <div class="rounded-xl border overflow-hidden" style="background: var(--bg-surface-elevated); border-color: var(--border);">
             <div class="overflow-x-auto">
@@ -46,23 +46,31 @@
                         <tr>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap" style="color: var(--ink-muted);">Medicine Name</th>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap hidden sm:table-cell" style="color: var(--ink-muted);">Category</th>
-                            <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap hidden md:table-cell" style="color: var(--ink-muted);">Expiration</th>
+                            <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap min-w-[160px] hidden md:table-cell" style="color: var(--ink-muted);">Expiration</th>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-right text-xs font-medium whitespace-nowrap" style="color: var(--ink-muted);"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[var(--border)]">
                         @forelse ($medicines as $medicine)
                             <tr class="transition-colors hover:bg-black/[0.02]">
-                                <td class="px-3 lg:px-4 py-2 lg:py-3" style="color: var(--ink);">{{ $medicine->medicine_name }}</td>
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden sm:table-cell" style="color: var(--ink-muted);">{{ $medicine->category ?? '—' }}</td>
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell" style="color: var(--ink-muted);">
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 whitespace-nowrap truncate max-w-[220px] sm:max-w-[260px] lg:max-w-[320px]" style="color: var(--ink);">
+                                    {{ $medicine->medicine_name }}
+                                </td>
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden sm:table-cell whitespace-nowrap truncate max-w-[140px] md:max-w-[180px]" style="color: var(--ink-muted);">
+                                    {{ $medicine->category ?? '—' }}
+                                </td>
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell min-w-[160px] whitespace-nowrap" style="color: var(--ink-muted);">
                                     @if ($medicine->expiration_date)
-                                        {{ \Carbon\Carbon::parse($medicine->expiration_date)->format('M d, Y') }}
-                                        @if (\Carbon\Carbon::parse($medicine->expiration_date)->isPast())
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-800 w-fit ml-2">
-                                                Expired
+                                        <div class="flex items-center gap-2">
+                                            <span class="whitespace-nowrap">
+                                                {{ \Carbon\Carbon::parse($medicine->expiration_date)->format('M d, Y') }}
                                             </span>
-                                        @endif
+                                            @if (\Carbon\Carbon::parse($medicine->expiration_date)->isPast())
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-800 w-fit">
+                                                    Expired
+                                                </span>
+                                            @endif
+                                        </div>
                                     @else
                                         —
                                     @endif

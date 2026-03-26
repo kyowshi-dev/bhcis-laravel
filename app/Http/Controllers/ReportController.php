@@ -70,41 +70,24 @@ class ReportController extends Controller
         $start = Carbon::createFromDate($year, $month, 1)->startOfDay();
         $end = $start->copy()->endOfMonth();
 
-        $startDate = $start->toDateString();
-        $endDate = $end->toDateString();
-
-        $totalConsultations = (int) DB::table('consultations')
+        $total = DB::table('consultations')
             ->whereBetween('created_at', [$start, $end])
             ->count();
 
-        $prenatalCount = (int) DB::table('consultations')
+        $byNature = DB::table('consultations')
             ->whereBetween('created_at', [$start, $end])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['prenatal'])
-            ->count();
+            ->select('nature_of_visit', DB::raw('COUNT(*) as count'))
+            ->groupBy('nature_of_visit')
+            ->get()
+            ->keyBy('nature_of_visit');
 
-        $consultationImmunizationCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$start, $end])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['immunization'])
-            ->count();
+        $prenatalCount = (int) ($byNature['Prenatal']->count ?? 0);
+        $immunizationCount = (int) ($byNature['Immunization']->count ?? 0);
 
-        $postpartumCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$start, $end])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['postpartum'])
-            ->count();
+        $postpartumCount = 0;
+        $familyPlanningCount = 0;
 
-        $familyPlanningCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$start, $end])
-            ->whereRaw('LOWER(nature_of_visit) = ? OR LOWER(nature_of_visit) = ?', ['family planning', 'family_planning'])
-            ->count();
-
-        $generalCount = max(
-            0,
-            $totalConsultations - $prenatalCount - $consultationImmunizationCount - $postpartumCount - $familyPlanningCount
-        );
-
-        $immunizationCount = (int) DB::table('immunization_records')
-            ->whereBetween('date_given', [$startDate, $endDate])
-            ->count();
+        $generalCount = max(0, $total - $prenatalCount - $immunizationCount - $postpartumCount - $familyPlanningCount);
 
         $programs = collect([
             [
@@ -139,48 +122,12 @@ class ReportController extends Controller
             ],
         ]);
 
-        $total = $generalCount + $prenatalCount + $postpartumCount + $immunizationCount + $familyPlanningCount;
-
         $previousStart = $start->copy()->subMonth()->startOfDay();
         $previousEnd = $previousStart->copy()->endOfMonth();
 
-        $previousStartDate = $previousStart->toDateString();
-        $previousEndDate = $previousEnd->toDateString();
-
-        $previousTotalConsultations = (int) DB::table('consultations')
+        $previousTotal = DB::table('consultations')
             ->whereBetween('created_at', [$previousStart, $previousEnd])
             ->count();
-
-        $previousPrenatalCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$previousStart, $previousEnd])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['prenatal'])
-            ->count();
-
-        $previousConsultationImmunizationCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$previousStart, $previousEnd])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['immunization'])
-            ->count();
-
-        $previousPostpartumCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$previousStart, $previousEnd])
-            ->whereRaw('LOWER(nature_of_visit) = ?', ['postpartum'])
-            ->count();
-
-        $previousFamilyPlanningCount = (int) DB::table('consultations')
-            ->whereBetween('created_at', [$previousStart, $previousEnd])
-            ->whereRaw('LOWER(nature_of_visit) = ? OR LOWER(nature_of_visit) = ?', ['family planning', 'family_planning'])
-            ->count();
-
-        $previousGeneralCount = max(
-            0,
-            $previousTotalConsultations - $previousPrenatalCount - $previousConsultationImmunizationCount - $previousPostpartumCount - $previousFamilyPlanningCount
-        );
-
-        $previousImmunizationCount = (int) DB::table('immunization_records')
-            ->whereBetween('date_given', [$previousStartDate, $previousEndDate])
-            ->count();
-
-        $previousTotal = $previousGeneralCount + $previousPrenatalCount + $previousPostpartumCount + $previousImmunizationCount + $previousFamilyPlanningCount;
 
         $growthPercent = null;
 
