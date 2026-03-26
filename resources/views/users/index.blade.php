@@ -58,16 +58,22 @@
                             </td>
                             <td class="px-3 lg:px-6 py-2 lg:py-3 text-sm text-right">
                                 @if ($user->is_active)
-                                    <form action="{{ route('users.disable', $user) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button
-                                            type="submit"
-                                            class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-red-300 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
-                                            onclick="return confirm('Are you sure you want to disable this user?');"
-                                        >
-                                            Disable
-                                        </button>
-                                    </form>
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-red-300 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+                                        onclick="openDisableModal({{ $user->id }}, '{{ $user->username }}')"
+                                    >
+                                        Disable
+                                    </button>
+                                @endif
+                                @if (auth()->user()->isAdmin() && $user->id !== auth()->id())
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 ml-2 rounded-full border border-red-500 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition"
+                                        onclick="openDeleteModal({{ $user->id }}, '{{ $user->username }}')"
+                                    >
+                                        Delete
+                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -87,4 +93,78 @@
         {{ $users->links() }}
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" style="display: none;">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm User Deletion</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    You are about to permanently delete user <strong id="deleteUsername"></strong>.
+                    This action cannot be undone and will remove all associated data.
+                </p>
+
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                            Enter your password to confirm
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
+                            placeholder="Your password"
+                        >
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            type="button"
+                            onclick="closeDeleteModal()"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition"
+                        >
+                            Delete User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(userId, username) {
+    document.getElementById('deleteUsername').textContent = username;
+    document.getElementById('deleteForm').action = `/users/${userId}`;
+    document.getElementById('deleteModal').style.display = 'flex';
+    document.getElementById('password').focus();
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    document.getElementById('deleteForm').reset();
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>
 @endsection
