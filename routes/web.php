@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/search/patients', [SearchController::class, 'patients'])->name('search.patients');
     Route::get('/search/diagnoses', [SearchController::class, 'diagnoses'])->name('search.diagnoses');
     Route::get('/search/medicines', [SearchController::class, 'medicines'])->name('search.medicines');
+    Route::get('/search/households', [SearchController::class, 'households'])->name('search.households');
 
     // 3. PATIENT MANAGEMENT
     // Households (Census)

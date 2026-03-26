@@ -15,6 +15,18 @@ class DashboardController extends Controller
             ->whereIn('status', ['triage', 'pending_doctor'])
             ->count();
 
+        $today = Carbon::today();
+
+        $overdueImmunizations = DB::table('immunization_records')
+            ->whereNotNull('next_due_date')
+            ->whereDate('next_due_date', '<', $today)
+            ->count(DB::raw('distinct patient_id'));
+
+        $followUpConsultationsToday = DB::table('consultations')
+            ->whereDate('created_at', $today)
+            ->where('nature_of_visit', 'Follow-up')
+            ->count();
+
         $doctorsOnDuty = DB::table('health_workers')->count();
 
         $onDutyStaff = DB::table('health_workers')
@@ -47,6 +59,8 @@ class DashboardController extends Controller
         return view('dashboard', [
             'totalPatients' => $totalPatients,
             'pendingAppointments' => $pendingAppointments,
+            'overdueImmunizations' => $overdueImmunizations,
+            'followUpConsultationsToday' => $followUpConsultationsToday,
             'doctorsOnDuty' => $doctorsOnDuty,
             'onDutyStaff' => $onDutyStaff,
             'recentActivity' => $recentActivity,

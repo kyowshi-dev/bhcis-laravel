@@ -50,6 +50,18 @@
             <p class="font-display font-semibold text-xl lg:text-2xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
             <p class="text-xs mt-2" style="color: var(--ink-muted);">Open queue awaiting review</p>
         </div>
+        <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+             style="background: #fef2f2; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #ef4444;">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: #991b1b;">Overdue immunizations</p>
+            <p class="font-display font-semibold text-xl lg:text-2xl" style="color: #b91c1c;">{{ $overdueImmunizations }}</p>
+            <p class="text-xs mt-2" style="color: #7f1d1d;">Patients needing follow-up</p>
+        </div>
+        <div class="animate-in opacity-0 delay-5 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+             style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #f59e0b;">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Follow-up today</p>
+            <p class="font-display font-semibold text-xl lg:text-2xl" style="color: var(--ink);">{{ $followUpConsultationsToday }}</p>
+            <p class="text-xs mt-2" style="color: var(--ink-muted);">Follow-up visits scheduled</p>
+        </div>
         <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md sm:col-span-2 lg:col-span-1"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Health workers</p>

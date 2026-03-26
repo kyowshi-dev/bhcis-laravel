@@ -15,38 +15,107 @@
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-800">Register New Patient</h1>
-        <a href="{{ route('patients.index') }}" class="text-xs lg:text-sm text-gray-600 hover:text-sky-600">Cancel</a>
     </div>
 
-    <form action="{{ route('patients.store') }}" method="POST" class="bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8">
+    <form action="{{ route('patients.store') }}" method="POST" class="bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8" x-data="patientCreateTabs()" x-init="init()">
         @csrf
 
-        <div class="pb-4 lg:pb-6 border-b border-gray-100">
+        {{-- Tabbed layout to reduce vertical scrolling --}}
+        <div class="flex flex-wrap gap-2 border-b border-gray-100 pb-4">
+            <button type="button"
+                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
+                    :class="tab === 'household' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
+                    @click="tab = 'household'">
+                Household
+            </button>
+            <button type="button"
+                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
+                    :class="tab === 'personal' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
+                    @click="tab = 'personal'">
+                Personal Info
+            </button>
+            <button type="button"
+                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
+                    :class="tab === 'social' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
+                    @click="tab = 'social'">
+                Social Status
+            </button>
+        </div>
+
+        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'household'" x-cloak>
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">🏠</span>
                 Household Information
             </h3>
             
-            <div>
-                <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">Select Household <span class="text-red-500">*</span></label>
-                <select name="household_id" 
-                        class="w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border @error('household_id') border-red-500 bg-red-50 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
-                    <option value="">-- Choose Family --</option>
-                    @foreach($households as $h)
-                        <option value="{{ $h->id }}" {{ old('household_id') == $h->id ? 'selected' : '' }}>
-                            {{ $h->family_name_head }} (Zone {{ $h->zone_id }})
-                        </option>
-                    @endforeach
-                </select>
+            <div x-data="householdAutocomplete({
+                    initialId: {{ old('household_id') ? (int) old('household_id') : 'null' }},
+                    initialText: @json($selectedHousehold?->family_name_head ?? ''),
+                    transientId: {{ $transientHouseholdId ?? 'null' }},
+                    transientLabel: @json($transientHouseholdLabel ?? 'Transient/Unmapped')
+                })"
+                 x-init="init()">
+                <label class="block text-xs lg:text-sm font-medium text-gray-700 mb-1">
+                    Select Household <span class="text-red-500">*</span>
+                </label>
+
+                <div class="flex items-center gap-3 flex-wrap mb-3">
+                    <input type="checkbox"
+                           id="transient_unmapped"
+                           x-model="isTransient"
+                           @change="onTransientToggle()"
+                           class="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded"
+                           :disabled="transientHouseholdId === null">
+                    <label for="transient_unmapped" class="text-xs lg:text-sm text-gray-800 font-medium">
+                        Transient/Unmapped
+                    </label>
+
+                    <template x-if="transientHouseholdId === null">
+                        <span class="text-xs text-red-600">Transient household not found.</span>
+                    </template>
+                </div>
+
+                <input type="hidden" name="household_id" x-model="householdId">
+
+                <div class="relative">
+                    <input type="text"
+                           x-ref="householdSearch"
+                           x-model="query"
+                           @input.debounce.250ms="search()"
+                           @focus="dropdownOpen = true"
+                           @keydown.escape="dropdownOpen = false"
+                           @click="dropdownOpen = true"
+                           :disabled="isTransient"
+                           placeholder="Search household (family name / zone / contact)..."
+                           class="w-full px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border @error('household_id') border-red-500 bg-red-50 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm"
+                           autocomplete="off">
+
+                    <div x-show="dropdownOpen && !isTransient && results.length > 0" class="absolute z-20 w-full bg-white mt-1 border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                        <ul>
+                            <template x-for="item in results" :key="item.id">
+                                <li class="px-3 lg:px-4 py-2 lg:py-2.5 hover:bg-sky-50 cursor-pointer border-b last:border-0 text-xs lg:text-sm"
+                                    @click.prevent="select(item)">
+                                    <div class="font-medium text-gray-800" x-text="item.text"></div>
+                                    <div class="text-xs text-gray-500" x-text="item.subtext"></div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-500" x-show="!isTransient && query.length > 0 && results.length === 0" x-cloak>
+                    No household found.
+                </div>
+
                 @error('household_id')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @else
-                    <p class="text-xs text-gray-500 mt-1">If patient is transient, select the "Transient/Unmapped" household.</p>
+                    <p class="text-xs text-gray-500 mt-1">Use search to avoid scrolling through 500+ households.</p>
                 @enderror
             </div>
         </div>
 
-        <div class="pb-4 lg:pb-6 border-b border-gray-100">
+        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'personal'" x-cloak>
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">👤</span>
                 Personal Information
@@ -109,7 +178,7 @@
             </div>
         </div>
 
-        <div class="pb-4 lg:pb-6 border-b border-gray-100">
+        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'social'" x-cloak>
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">💼</span>
                 Socio-Economic Status
@@ -163,5 +232,98 @@
             </button>
         </div>
     </form>
+
+    <script>
+        function patientCreateTabs() {
+            return {
+                tab: 'household',
+                init() {
+                    this.tab = 'household';
+                },
+            };
+        }
+
+        function householdAutocomplete({ initialId, initialText, transientId, transientLabel }) {
+            return {
+                query: initialText || '',
+                householdId: initialId || null,
+                transientHouseholdId: transientId ?? null,
+                transientHouseholdLabel: transientLabel || 'Transient/Unmapped',
+                isTransient: transientId !== null && initialId !== null && String(initialId) === String(transientId),
+                previousHouseholdId: null,
+                previousQuery: null,
+                dropdownOpen: false,
+                results: [],
+                loading: false,
+
+                init() {
+                    this.$nextTick(() => {
+                        if (this.$refs.householdSearch) {
+                            this.$refs.householdSearch.focus();
+                        }
+                    });
+
+                    // If the old household is the transient household, lock it in.
+                    if (this.isTransient && this.transientHouseholdId !== null) {
+                        this.householdId = this.transientHouseholdId;
+                        this.query = this.transientHouseholdLabel;
+                    }
+                },
+
+                async search() {
+                    if (this.isTransient) return;
+                    const q = (this.query || '').trim();
+                    if (q.length < 2) {
+                        this.results = [];
+                        this.dropdownOpen = false;
+                        return;
+                    }
+
+                    this.loading = true;
+                    try {
+                        const response = await fetch(`/search/households?query=${encodeURIComponent(q)}`);
+                        this.results = await response.json();
+                        this.dropdownOpen = this.results.length > 0;
+                    } catch (e) {
+                        console.error('Household search failed:', e);
+                        this.results = [];
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                select(item) {
+                    this.householdId = item.id;
+                    this.query = item.text;
+                    this.results = [];
+                    this.dropdownOpen = false;
+                },
+
+                onTransientToggle() {
+                    this.results = [];
+                    this.dropdownOpen = false;
+
+                    if (this.isTransient) {
+                        this.previousHouseholdId = this.householdId;
+                        this.previousQuery = this.query;
+
+                        if (this.transientHouseholdId === null) {
+                            this.isTransient = false;
+                            return;
+                        }
+
+                        this.householdId = this.transientHouseholdId;
+                        this.query = this.transientHouseholdLabel;
+                        return;
+                    }
+
+                    if (this.previousHouseholdId !== null) {
+                        this.householdId = this.previousHouseholdId;
+                        this.query = this.previousQuery ?? this.query;
+                    }
+                },
+            };
+        }
+    </script>
 </div>
 @endsection

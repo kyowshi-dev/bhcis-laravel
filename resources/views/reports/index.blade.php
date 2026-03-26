@@ -7,7 +7,7 @@
         <p class="text-sm mt-1" style="color: var(--ink-muted);">DOH Field Health Service Information System — official report formats for RHU.</p>
     </div>
 
-    <form method="GET" action="{{ route('reports.index') }}" class="rounded-xl border p-4 max-w-md" style="background: var(--bg-surface); border-color: var(--border);">
+    <form method="GET" action="{{ route('reports.index') }}" id="reportPeriodForm" class="rounded-xl border p-4 max-w-md" style="background: var(--bg-surface); border-color: var(--border);">
         <h2 class="text-xs lg:text-sm font-semibold mb-2 lg:mb-3" style="color: var(--ink);">Report period</h2>
         <div class="flex flex-wrap items-end gap-2 lg:gap-3">
             <div class="flex-1 min-w-[100px]">
@@ -38,5 +38,29 @@
             <p class="text-sm" style="color: var(--ink-muted);">Monthly consolidation of consultations by program (general, prenatal, postpartum, immunization, family planning).</p>
         </a>
     </div>
+
+    <script>
+        (function () {
+            const form = document.getElementById('reportPeriodForm');
+            if (!form) return;
+
+            const submitForm = function () {
+                if (typeof form.requestSubmit === 'function') {
+                    form.requestSubmit();
+                    return;
+                }
+                form.submit();
+            };
+
+            form.addEventListener('change', function (e) {
+                const target = e.target;
+                if (!target) return;
+
+                if (target.id === 'month' || target.id === 'year') {
+                    submitForm();
+                }
+            });
+        })();
+    </script>
 </div>
 @endsection

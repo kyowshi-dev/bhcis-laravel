@@ -31,8 +31,8 @@ class SearchController extends Controller
         $results = $patients->map(function ($patient) {
             return [
                 'id' => $patient->id,
-                'text' => $patient->last_name . ', ' . $patient->first_name, // What shows in the dropdown
-                'subtext' => $patient->sex . ' | ' . $patient->date_of_birth, // Extra info
+                'text' => $patient->last_name.', '.$patient->first_name, // What shows in the dropdown
+                'subtext' => $patient->sex.' | '.$patient->date_of_birth, // Extra info
             ];
         });
 
@@ -60,7 +60,7 @@ class SearchController extends Controller
         $results = $diagnoses->map(function ($d) {
             return [
                 'id' => $d->id,
-                'text' => $d->diagnosis_code . ' - ' . $d->diagnosis_name,
+                'text' => $d->diagnosis_code.' - '.$d->diagnosis_name,
             ];
         });
 
@@ -88,6 +88,41 @@ class SearchController extends Controller
             return [
                 'id' => $m->id,
                 'text' => $m->medicine_name,
+            ];
+        });
+
+        return response()->json($results);
+    }
+
+    /**
+     * Search for Households (by Family Name Head / Zone / Contact)
+     */
+    public function households(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        $households = DB::table('households')
+            ->join('zones', 'households.zone_id', '=', 'zones.id')
+            ->where(function ($qb) use ($query) {
+                $qb->where('households.family_name_head', 'LIKE', "%{$query}%")
+                    ->orWhere('zones.zone_number', 'LIKE', "%{$query}%")
+                    ->orWhere('households.contact_number', 'LIKE', "%{$query}%");
+            })
+            ->select('households.id', 'households.family_name_head', 'zones.zone_number', 'households.contact_number')
+            ->limit(15)
+            ->get();
+
+        $results = $households->map(function ($h) {
+            $contact = $h->contact_number ? trim((string) $h->contact_number) : null;
+
+            return [
+                'id' => $h->id,
+                'text' => (string) $h->family_name_head,
+                'subtext' => 'Zone '.$h->zone_number.($contact ? ' | '.$contact : ''),
             ];
         });
 

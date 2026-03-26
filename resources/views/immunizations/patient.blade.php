@@ -39,7 +39,21 @@
                                 <td class="px-3 lg:px-4 py-2 lg:py-3" style="color: var(--ink);">{{ $r->vaccine_name }}@if($r->vaccine_code) <span class="text-xs" style="color: var(--ink-muted);">({{ $r->vaccine_code }})</span>@endif</td>
                                 <td class="px-3 lg:px-4 py-2 lg:py-3" style="color: var(--ink);">{{ $r->dose_number }}</td>
                                 <td class="px-3 lg:px-4 py-2 lg:py-3 hidden sm:table-cell" style="color: var(--ink-muted);">{{ $r->administered_by_name ?? '—' }}</td>
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell" style="color: var(--ink-muted);">{{ $r->next_due_date ? \Carbon\Carbon::parse($r->next_due_date)->format('M d, Y') : '—' }}</td>
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell" style="color: var(--ink-muted);">
+                                    @php
+                                        $isOverdue = $r->next_due_date && \Carbon\Carbon::parse($r->next_due_date)->isBefore(\Carbon\Carbon::today());
+                                    @endphp
+                                    <div class="flex flex-col gap-1">
+                                        <div>
+                                            {{ $r->next_due_date ? \Carbon\Carbon::parse($r->next_due_date)->format('M d, Y') : '—' }}
+                                        </div>
+                                        @if ($isOverdue)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-800 w-fit">
+                                                Overdue
+                                            </span>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>

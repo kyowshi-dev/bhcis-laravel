@@ -36,15 +36,32 @@ class PatientController extends Controller
     }
 
     // 2. Show the Registration Form
-    public function create()
+    public function create(Request $request)
     {
-        // We need households for the dropdown
-        $households = DB::table('households')
-            ->select('id', 'family_name_head', 'zone_id')
-            ->orderBy('family_name_head')
-            ->get();
+        $selectedHouseholdId = $request->old('household_id');
 
-        return view('patients.create', compact('households'));
+        $transientHousehold = DB::table('households')
+            ->where(function ($qb) {
+                $qb->whereRaw('LOWER(family_name_head) LIKE ?', ['%transient%'])
+                    ->orWhereRaw('LOWER(family_name_head) LIKE ?', ['%unmapped%']);
+            })
+            ->select(['id', 'family_name_head'])
+            ->first();
+
+        $selectedHousehold = null;
+        if (! empty($selectedHouseholdId)) {
+            $selectedHousehold = DB::table('households')
+                ->join('zones', 'households.zone_id', '=', 'zones.id')
+                ->select('households.id', 'households.family_name_head', 'zones.zone_number', 'households.contact_number')
+                ->where('households.id', $selectedHouseholdId)
+                ->first();
+        }
+
+        return view('patients.create', [
+            'transientHouseholdId' => $transientHousehold?->id,
+            'transientHouseholdLabel' => $transientHousehold?->family_name_head,
+            'selectedHousehold' => $selectedHousehold,
+        ]);
     }
 
     // 3. Save the New Patient
