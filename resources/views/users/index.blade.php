@@ -13,7 +13,7 @@
         <a href="{{ route('users.create') }}"
            class="inline-flex items-center justify-center px-4 lg:px-5 py-2 lg:py-2.5 rounded-xl lg:rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 text-xs lg:text-sm font-semibold text-white shadow-md hover:shadow-xl transition">
             + Add User
-        </a>
+</a>
     </div>
 
     <div class="overflow-hidden rounded-xl lg:rounded-2xl border border-gray-200 bg-white/80 shadow-sm">
@@ -68,23 +68,6 @@
                                             Disable
                                         </button>
                                     </form>
-                                @else
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-emerald-300 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 transition"
-                                        onclick="openEnableModal({{ $user->id }}, '{{ $user->username }}')"
-                                    >
-                                        Enable
-                                    </button>
-                                @endif
-                                @if (auth()->user()->isAdmin() && $user->id !== auth()->id())
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 ml-2 rounded-full border border-red-500 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 transition"
-                                        onclick="openDeleteModal({{ $user->id }}, '{{ $user->username }}')"
-                                    >
-                                        Delete
-                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -104,148 +87,4 @@
         {{ $users->links() }}
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" style="display: none;">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm User Deletion</h3>
-                <p class="text-sm text-gray-600 mb-4">
-                    You are about to permanently delete user <strong id="deleteUsername"></strong>.
-                    This action cannot be undone and will remove all associated data.
-                </p>
-
-                <form id="deleteForm" method="POST">
-                    @csrf
-                    @method('DELETE')
-
-                    <div class="mb-4">
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-                            Enter your password to confirm
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
-                            placeholder="Your password"
-                        >
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            onclick="closeDeleteModal()"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition"
-                        >
-                            Delete User
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Enable Confirmation Modal -->
-<div id="enableModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" style="display: none;">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm User Enable</h3>
-                <p class="text-sm text-gray-600 mb-4">
-                    You are about to re-enable user <strong id="enableUsername"></strong>.
-                    They will regain access to the system.
-                </p>
-
-                <form id="enableForm" method="POST">
-                    @csrf
-
-                    <div class="mb-4">
-                        <label for="enablePassword" class="block text-sm font-medium text-gray-700 mb-1">
-                            Enter your password to confirm
-                        </label>
-                        <input
-                            type="password"
-                            id="enablePassword"
-                            name="password"
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
-                            placeholder="Your password"
-                        >
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button
-                            type="button"
-                            onclick="closeEnableModal()"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-transparent rounded-lg hover:bg-emerald-700 transition"
-                        >
-                            Enable User
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function openDeleteModal(userId, username) {
-    document.getElementById('deleteUsername').textContent = username;
-    document.getElementById('deleteForm').action = `/users/${userId}`;
-    document.getElementById('deleteModal').style.display = 'flex';
-    document.getElementById('password').focus();
-}
-
-function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-    document.getElementById('deleteForm').reset();
-}
-
-function openEnableModal(userId, username) {
-    document.getElementById('enableUsername').textContent = username;
-    document.getElementById('enableForm').action = `/users/${userId}/enable`;
-    document.getElementById('enableModal').style.display = 'flex';
-    document.getElementById('enablePassword').focus();
-}
-
-function closeEnableModal() {
-    document.getElementById('enableModal').style.display = 'none';
-    document.getElementById('enableForm').reset();
-}
-
-// Close modal when clicking outside
-document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeDeleteModal();
-    }
-});
-
-document.getElementById('enableModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeEnableModal();
-    }
-});
-</script>
 @endsection
