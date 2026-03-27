@@ -46,31 +46,23 @@
                         <tr>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap" style="color: var(--ink-muted);">Medicine Name</th>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap hidden sm:table-cell" style="color: var(--ink-muted);">Category</th>
-                            <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap min-w-[160px] hidden md:table-cell" style="color: var(--ink-muted);">Expiration</th>
+                            <th class="px-3 lg:px-4 py-2 lg:py-3 text-left text-xs font-medium whitespace-nowrap hidden md:table-cell" style="color: var(--ink-muted);">Expiration</th>
                             <th class="px-3 lg:px-4 py-2 lg:py-3 text-right text-xs font-medium whitespace-nowrap" style="color: var(--ink-muted);"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[var(--border)]">
                         @forelse ($medicines as $medicine)
                             <tr class="transition-colors hover:bg-black/[0.02]">
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 whitespace-nowrap truncate max-w-[220px] sm:max-w-[260px] lg:max-w-[320px]" style="color: var(--ink);">
-                                    {{ $medicine->medicine_name }}
-                                </td>
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden sm:table-cell whitespace-nowrap truncate max-w-[140px] md:max-w-[180px]" style="color: var(--ink-muted);">
-                                    {{ $medicine->category ?? '—' }}
-                                </td>
-                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell min-w-[160px] whitespace-nowrap" style="color: var(--ink-muted);">
+                                <td class="px-3 lg:px-4 py-2 lg:py-3" style="color: var(--ink);">{{ $medicine->medicine_name }}</td>
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden sm:table-cell" style="color: var(--ink-muted);">{{ $medicine->category ?? '—' }}</td>
+                                <td class="px-3 lg:px-4 py-2 lg:py-3 hidden md:table-cell" style="color: var(--ink-muted);">
                                     @if ($medicine->expiration_date)
-                                        <div class="flex items-center gap-2">
-                                            <span class="whitespace-nowrap">
-                                                {{ \Carbon\Carbon::parse($medicine->expiration_date)->format('M d, Y') }}
+                                        {{ \Carbon\Carbon::parse($medicine->expiration_date)->format('M d, Y') }}
+                                        @if (\Carbon\Carbon::parse($medicine->expiration_date)->isPast())
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-800 w-fit ml-2">
+                                                Expired
                                             </span>
-                                            @if (\Carbon\Carbon::parse($medicine->expiration_date)->isPast())
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-800 w-fit">
-                                                    Expired
-                                                </span>
-                                            @endif
-                                        </div>
+                                        @endif
                                     @else
                                         —
                                     @endif
@@ -91,14 +83,14 @@
             </div>
 
             @if ($medicines->hasPages())
-                <div class="mt-4">
-                    {{ $medicines->links() }}
+                <div class="border-t px-3 lg:px-4 py-3" style="border-color: var(--border);">
+                    {{ $medicines->onEachSide(1)->links() }}
                 </div>
             @endif
         </div>
 
         <div>
-            <div class="rounded-xl border p-5 lg:p-6" style="background: var(--bg-surface); border-color: var(--border);">
+            <div class="rounded-xl border p-5 lg:p-6" style="background: var(--bg-surface); border-color: var(--border); margin-top: 10vh;">
                 <h2 class="font-display font-semibold text-lg mb-4" style="color: var(--ink);">Import CSV</h2>
                 <p class="text-sm mb-4" style="color: var(--ink-muted);">Upload a CSV file to bulk import medicines. The file should have columns: medicine_name (required), category, description, expiration_date.</p>
                 

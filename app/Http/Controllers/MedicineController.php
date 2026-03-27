@@ -11,7 +11,8 @@ class MedicineController extends Controller
     {
         $medicines = DB::table('medicines_lookup')
             ->orderBy('medicine_name')
-            ->paginate(20);
+            ->paginate(5)
+            ->withQueryString();
 
         return view('medicines.index', [
             'medicines' => $medicines,

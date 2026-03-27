@@ -89,10 +89,11 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <div class="pt-2">
-        {{ $patients->links() }}
+        @if ($patients->hasPages())
+            <div class="border-t px-4 py-3" style="border-color: var(--border);">
+                {{ $patients->onEachSide(1)->links() }}
+            </div>
+        @endif
     </div>
 </div>
 
