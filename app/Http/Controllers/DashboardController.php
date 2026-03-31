@@ -31,6 +31,8 @@ class DashboardController extends Controller
 
         $doctorsOnDuty = DB::table('health_workers')->count();
 
+        $pendingPasswordResets = DB::table('password_reset_requests')->where('status', 'pending')->count();
+
         $onDutyStaff = DB::table('health_workers')
             ->select('first_name', 'last_name', 'role')
             ->orderBy('last_name')
@@ -64,6 +66,7 @@ class DashboardController extends Controller
             'overdueImmunizations' => $overdueImmunizations,
             'followUpConsultationsToday' => $followUpConsultationsToday,
             'doctorsOnDuty' => $doctorsOnDuty,
+            'pendingPasswordResets' => $pendingPasswordResets,
             'onDutyStaff' => $onDutyStaff,
             'recentActivity' => $recentActivity,
         ]);

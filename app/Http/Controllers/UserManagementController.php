@@ -65,6 +65,67 @@ class UserManagementController extends Controller
             ->with('success', 'User created successfully.');
     }
 
+    public function edit(User $user)
+    {
+        $roles = DB::table('user_roles')->orderBy('role_name')->get();
+        $healthWorker = DB::table('health_workers')->where('user_id', $user->id)->first();
+
+        return view('users.edit', [
+            'user' => $user,
+            'roles' => $roles,
+            'healthWorker' => $healthWorker,
+        ]);
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'contact_number' => ['nullable', 'string', 'max:255', 'regex:/^[0-9+\-\s()]*$/'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username,'.$user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role_id' => ['required', 'integer', 'exists:user_roles,id'],
+        ]);
+
+        DB::transaction(function () use ($user, $validated) {
+            if ($user->role_id !== $validated['role_id']) {
+                $user->role_id = $validated['role_id'];
+            }
+
+            if ($user->username !== $validated['username']) {
+                $user->username = $validated['username'];
+            }
+
+            if ($user->email !== $validated['email']) {
+                $user->email = $validated['email'];
+            }
+
+            if (! empty($validated['password'])) {
+                $user->password = $validated['password'];
+            }
+
+            $user->save();
+
+            $roleName = DB::table('user_roles')->where('id', $validated['role_id'])->value('role_name');
+
+            DB::table('health_workers')
+                ->where('user_id', $user->id)
+                ->update([
+                    'first_name' => $validated['first_name'],
+                    'last_name' => $validated['last_name'],
+                    'role' => $roleName,
+                    'contact_number' => $validated['contact_number'] ?? null,
+                    'updated_at' => now(),
+                ]);
+        });
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User updated successfully.');
+    }
+
     public function disable(User $user)
     {
         if (! $user->is_active) {

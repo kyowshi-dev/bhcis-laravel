@@ -81,6 +81,17 @@
             <p class="font-display font-semibold text-xl lg:text-2xl" style="color: var(--ink);">{{ $doctorsOnDuty }}</p>
             <p class="text-xs mt-2" style="color: var(--ink-muted);">Total staff on record</p>
         </div>
+        @if($pendingPasswordResets > 0)
+        <div class="animate-in opacity-0 delay-5 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+             style="background: #fef3c7; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #f59e0b;">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: #92400e;">Pending password resets</p>
+            <p class="font-display font-semibold text-xl lg:text-2xl" style="color: #92400e;">{{ $pendingPasswordResets }}</p>
+            <p class="text-xs mt-2" style="color: #78350f;">Users awaiting password reset</p>
+            <div class="mt-4 flex gap-2 flex-wrap">
+                <a href="{{ route('users.password-reset-requests') }}" class="text-xs font-semibold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #f59e0b;">Review requests</a>
+            </div>
+        </div>
+        @endif
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
