@@ -6,11 +6,11 @@
     <title>Login - BHCIS Sta. Ana</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --font-display: 'Fraunces', Georgia, serif;
+            --font-display: 'Poppins', system-ui, sans-serif;
             --font-body: 'Source Sans 3', system-ui, sans-serif;
             --bg-page: #f5f0e8;
             --bg-surface: #fdfcfa;
@@ -75,11 +75,11 @@
     <div class="grain fixed inset-0 z-0"></div>
     <div class="absolute inset-0 z-0 opacity-50" style="background: linear-gradient(145deg, var(--teal-soft) 0%, transparent 40%, rgba(196,92,65,0.06) 100%);"></div>
 
-    <div class="relative z-10 w-full max-w-md mx-4">
-        <div class="rounded-2xl border p-8 lg:p-10 animate-in opacity-0" style="background: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow-lg);">
-            <div class="text-center mb-8">
-                <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white font-display font-semibold text-xl mb-4" style="background: var(--primary); font-family: var(--font-display);">B</div>
-                <h1 class="font-display font-semibold text-2xl lg:text-3xl mb-2" style="color: var(--ink); font-family: var(--font-display);">BHCIS</h1>
+    <div class="relative z-10 w-full mx-4" style="max-width:420px;">
+        <div class="rounded-2xl border p-6 lg:p-8 animate-in opacity-0" style="background: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow-lg);">
+            <div class="text-center mb-6">
+                <div class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white font-display font-semibold text-lg mb-3" style="background: var(--primary); font-family: var(--font-display);">B</div>
+                <h1 class="font-display font-semibold text-xl lg:text-2xl mb-1" style="color: var(--ink); font-family: var(--font-display);">BHCIS</h1>
                 <p class="text-sm" style="color: var(--ink-muted);">Sta. Ana Health Center — sign in to continue</p>
             </div>
 
@@ -93,18 +93,18 @@
                     </div>
                 @endif
 
-                <div class="mb-5">
+                  <div class="mb-4">
                     <label for="username" class="block text-sm font-medium mb-2" style="color: var(--ink);">Username</label>
-                    <input type="text" name="username" id="username" value="{{ old('username') }}"
-                           class="w-full px-4 py-3 rounded-lg border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
+                      <input type="text" name="username" id="username" value="{{ old('username') }}"
+                          class="w-full px-3 py-2 rounded-md border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
                            style="border-color: var(--border); --tw-ring-color: var(--primary);"
                            placeholder="Enter your username" required autofocus>
                 </div>
 
                 <div class="mb-6">
                     <label for="password" class="block text-sm font-medium mb-2" style="color: var(--ink);">Password</label>
-                    <input type="password" name="password" id="password"
-                           class="w-full px-4 py-3 rounded-lg border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
+                      <input type="password" name="password" id="password"
+                          class="w-full px-3 py-2 rounded-md border text-[var(--ink)] placeholder-[var(--ink-muted)] focus:outline-none focus:ring-2 transition"
                            style="border-color: var(--border); --tw-ring-color: var(--primary);"
                            placeholder="Enter your password" required>
                 </div>
@@ -119,12 +119,12 @@
                     </a>
                 </div>
 
-                <button type="submit" class="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-[0.99] accent-button">
+                <button type="submit" class="w-full py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-[0.99] accent-button">
                     Sign in
                 </button>
             </form>
 
-            <p class="text-center text-xs mt-8" style="color: var(--ink-muted);">
+            <p class="text-center text-xs mt-6" style="color: var(--ink-muted);">
                 &copy; {{ date('Y') }} Barangay Sta. Ana Health Center
             </p>
         </div>

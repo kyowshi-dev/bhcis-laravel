@@ -6,7 +6,7 @@
     <title>Forgot Password - BHCIS Sta. Ana</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -20,7 +20,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center" style="background: var(--bg-page); font-family:'Source Sans 3', sans-serif;">
+<body class="min-h-screen flex items-center justify-center" style="background: var(--bg-page); font-family: 'Poppins', 'Source Sans 3', sans-serif;">
     <div class="w-full max-w-sm p-8 bg-white rounded-2xl border border-gray-200 shadow-lg">
         <h1 class="text-2xl font-bold text-emerald-900 mb-4">Forgot Password</h1>
         <p class="text-sm text-gray-600 mb-6">Enter your username and an admin will be notified for manual reset in account management.</p>
