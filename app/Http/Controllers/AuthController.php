@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PasswordResetRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,9 +76,9 @@ class AuthController extends Controller
             'username' => ['required', 'string', 'max:255'],
         ]);
 
-        $user = \App\Models\User::where('username', $validated['username'])->first();
+        $user = User::where('username', $validated['username'])->first();
 
-        $requestRecord = \App\Models\PasswordResetRequest::create([
+        $requestRecord = PasswordResetRequest::create([
             'user_id' => $user?->id,
             'username_requested' => $validated['username'],
             'status' => 'pending',

@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 /**
  * Get the authenticated user instance
  */
-function user(): ?\App\Models\User {
+function user(): ?User
+{
     return Auth::user();
 }

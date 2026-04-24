@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\PasswordResetRequest;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -30,9 +32,9 @@ class PasswordResetRequestTest extends TestCase
     {
         $this->seed();
 
-        $admin = \App\Models\User::where('username', 'admin')->first();
+        $admin = User::where('username', 'admin')->first();
 
-        \App\Models\PasswordResetRequest::create([
+        PasswordResetRequest::create([
             'user_id' => $admin->id,
             'username_requested' => 'admin',
             'status' => 'pending',
@@ -43,7 +45,7 @@ class PasswordResetRequestTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Password Reset Requests');
 
-        $requestRecord = \App\Models\PasswordResetRequest::first();
+        $requestRecord = PasswordResetRequest::first();
 
         $response = $this->actingAs($admin)->post(route('users.password-reset-requests.complete', ['passwordResetRequest' => $requestRecord->id]), [
             'admin_note' => 'Reset completed by admin',
