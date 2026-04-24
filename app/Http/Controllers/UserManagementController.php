@@ -11,9 +11,11 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
+        $pageSize = auth()->check() && auth()->user()->isAdmin() ? 2 : 15;
+
         $users = User::query()
             ->orderBy('username')
-            ->paginate(15);
+            ->paginate($pageSize);
 
         return view('users.index', [
             'users' => $users,
@@ -129,6 +131,12 @@ class UserManagementController extends Controller
 
     public function disable(User $user)
     {
+        if ($user->isAdmin()) {
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'Admin accounts cannot be disabled.');
+        }
+
         if (! $user->is_active) {
             return redirect()
                 ->route('users.index')

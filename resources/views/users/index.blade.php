@@ -62,7 +62,7 @@
                                        class="inline-flex items-center px-2 lg:px-3 py-1 lg:py-1.5 rounded-full border border-sky-300 text-xs font-semibold text-sky-600 hover:bg-sky-50 transition">
                                         Edit
                                     </a>
-                                    @if ($user->is_active)
+                                    @if ($user->is_active && ! $user->isAdmin())
                                         <form action="{{ route('users.disable', $user) }}" method="POST" class="inline">
                                             @csrf
                                             <button
