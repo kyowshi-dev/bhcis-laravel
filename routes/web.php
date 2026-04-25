@@ -158,5 +158,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/settings', [ProfileController::class, 'settings'])->name('profile.settings');
     Route::put('/profile/settings', [ProfileController::class, 'updateSettings'])->name('profile.settings.update');
+    Route::get('/session/status', [ProfileController::class, 'sessionStatus'])->name('session.status');
 
 }); // <--- End of Auth Group

@@ -39,7 +39,7 @@
                         <td class="px-3 py-2">
                             @if($req->status === 'pending')
                                 <button type="button" 
-                                        class="px-2 py-1 rounded text-xs bg-emerald-500 text-white hover:bg-emerald-600"
+                                        class="px-2 py-1 rounded text-xs bg-primary text-white hover:bg-primary-dark"
                                         onclick="openModal({{ $req->id }}, '{{ $req->user?->username ?? 'Unknown' }}', '{{ $req->username_requested }}')">
                                     Mark Completed
                                 </button>
@@ -75,7 +75,7 @@
                 <input type="hidden" name="admin_note" value="Manual reset completed by admin." />
                 <div class="flex justify-end gap-3">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
-                    <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded hover:bg-emerald-600">Confirm</button>
+                    <button type="submit" class="px-4 py-2 text-sm bg-primary text-white rounded hover:bg-primary-dark">Confirm</button>
                 </div>
             </form>
         </div>
