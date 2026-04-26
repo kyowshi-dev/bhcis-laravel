@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePatientWithHouseholdRequest;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -63,76 +64,78 @@ class PatientController extends Controller
                 ->first();
         }
 
+        // Fetch zones for new household creation
+        $zones = DB::table('zones')
+            ->select('id', 'zone_number')
+            ->orderBy('zone_number')
+            ->get();
+
         return view('patients.create', [
             'selectedHouseholdId' => $selectedHouseholdId,
             'transientHouseholdId' => $transientHousehold?->id,
             'transientHouseholdLabel' => $transientHousehold?->family_name_head,
             'selectedHousehold' => $selectedHousehold,
+            'zones' => $zones,
         ]);
     }
 
-    // 3. Save the New Patient
-    public function store(Request $request)
+    // 3. Save the New Patient with optional Household creation
+    public function store(StorePatientWithHouseholdRequest $request)
     {
         $this->authorize('create', Patient::class);
 
-        // --- 1. ENHANCED VALIDATION ---
-        $validated = $request->validate([
-            'household_id' => 'required|exists:households,id', // Still required for now
+        $validated = $request->validated();
 
-            // Name: Only letters, spaces, dots, and dashes. No numbers.
-            'first_name' => ['required', 'string', 'min:2', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
-            'last_name' => ['required', 'string', 'min:2', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
-            'middle_name' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-Z\s\-\.]+$/'],
+        // --- 1. HANDLE HOUSEHOLD CREATION OR SELECTION ---
+        $householdId = $validated['household_id'];
 
-            'sex' => 'required|in:Male,Female',
-
-            // Birthdate: Must be a valid date and NOT in the future
-            'date_of_birth' => 'required|date|before:today',
-
-            'civil_status' => 'required|in:Single,Married,Widowed,Separated,Common Law',
-            'blood_type' => 'nullable|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
-            'educational_attainment' => 'nullable|string',
-            'employment_status' => 'nullable|string|max:100',
-        ], [
-            // Custom Error Messages
-            'first_name.regex' => 'First name cannot contain numbers or special symbols.',
-            'date_of_birth.before' => 'Birth date cannot be in the future.',
-            'household_id.required' => 'You must assign a household. If none exists, register the household first.',
-        ]);
+        if ((int) $validated['create_new_household'] === 1) {
+            // Create the household atomically with the patient
+            $householdId = DB::table('households')->insertGetId([
+                'zone_id' => $validated['new_household_zone_id'],
+                'family_name_head' => trim($validated['new_household_family_name_head']),
+                'contact_number' => $validated['new_household_contact_number'] !== null ? trim($validated['new_household_contact_number']) : null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // --- 2. DUPLICATE CHECK ---
         // Prevents double-entry of the same person
         $exists = DB::table('patients')
-            ->where('first_name', $request->first_name)
-            ->where('last_name', $request->last_name)
-            ->where('date_of_birth', $request->date_of_birth)
+            ->where('first_name', $validated['first_name'])
+            ->where('last_name', $validated['last_name'])
+            ->where('date_of_birth', $validated['date_of_birth'])
             ->exists();
 
         if ($exists) {
-            // Returns the user to the form with their input intact
+            // In case of duplicate, rollback household creation if we just created it
+            if ((int) $validated['create_new_household'] === 1) {
+                DB::table('households')->where('id', $householdId)->delete();
+            }
+
             return back()->withInput()->withErrors(['first_name' => 'This patient is already registered in the system!']);
         }
 
-        // --- 3. INSERT DATA (Sanitized) ---
+        // --- 3. INSERT PATIENT DATA (Sanitized) ---
         DB::table('patients')->insert([
-            'household_id' => $request->household_id,
+            'household_id' => $householdId,
             // Auto-Capitalize Names
-            'first_name' => ucwords(strtolower($request->first_name)),
-            'last_name' => ucwords(strtolower($request->last_name)),
-            'middle_name' => $request->middle_name ? ucwords(strtolower($request->middle_name)) : null,
+            'first_name' => ucwords(strtolower($validated['first_name'])),
+            'last_name' => ucwords(strtolower($validated['last_name'])),
+            'middle_name' => $validated['middle_name'] ? ucwords(strtolower($validated['middle_name'])) : null,
 
-            'suffix' => $request->suffix,
-            'sex' => $request->sex,
-            'date_of_birth' => $request->date_of_birth,
-            'birth_place' => $request->birth_place,
-            'blood_type' => $request->blood_type,
-            'civil_status' => $request->civil_status,
-            'educational_attainment' => $request->educational_attainment,
-            'employment_status' => $request->employment_status,
+            'suffix' => $validated['suffix'],
+            'sex' => $validated['sex'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'birth_place' => $validated['birth_place'],
+            'blood_type' => $validated['blood_type'],
+            'civil_status' => $validated['civil_status'],
+            'educational_attainment' => $validated['educational_attainment'],
+            'employment_status' => $validated['employment_status'],
 
-            'has_4ps' => $request->has('has_4ps') ? 1 : 0,
-            'has_nhts' => $request->has('has_nhts') ? 1 : 0,
+            'has_4ps' => $validated['has_4ps'],
+            'has_nhts' => $validated['has_nhts'],
 
             'created_at' => now(),
             'updated_at' => now(),
