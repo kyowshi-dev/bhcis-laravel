@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-5 lg:space-y-6">
+<div class="space-y-5 lg:space-y-6" x-data="{ blurSensitive: true }">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">Patient records</h1>
@@ -40,6 +40,13 @@
         </div>
     </div>
 
+    <div class="flex justify-end">
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" x-model="blurSensitive" class="rounded border" style="border-color: var(--border);">
+            <span class="text-sm" style="color: var(--ink-muted);">Blur Sensitive Info</span>
+        </label>
+    </div>
+
     <div class="rounded-xl border overflow-hidden" style="background: var(--bg-surface-elevated); border-color: var(--border); box-shadow: var(--shadow-sm);">
         <div class="overflow-x-auto">
             <table class="min-w-full text-left text-xs lg:text-sm">
@@ -59,12 +66,12 @@
                         <tr class="transition-colors hover:bg-black/[0.02]">
                             <td class="px-4 py-2.5 font-medium whitespace-nowrap" style="color: var(--ink);">PT{{ str_pad($patient->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td class="px-4 py-2.5" style="color: var(--ink);">
-                                <div class="font-medium">{{ $patient->last_name }}, {{ $patient->first_name }}</div>
+                                <div class="font-medium" :class="{ 'blur-sensitive': blurSensitive }">{{ $patient->last_name }}, {{ $patient->first_name }}</div>
                                 <div class="text-xs sm:hidden" style="color: var(--ink-muted);">{{ $patient->sex }}</div>
                             </td>
                             <td class="px-4 py-2.5 whitespace-nowrap" style="color: var(--ink-muted);">{{ \Carbon\Carbon::parse($patient->date_of_birth)->age }}</td>
                             <td class="px-4 py-2.5 whitespace-nowrap hidden sm:table-cell" style="color: var(--ink-muted);">{{ $patient->sex }}</td>
-                            <td class="px-4 py-2.5 whitespace-nowrap hidden md:table-cell" style="color: var(--ink-muted);">{{ $patient->contact_number ?? '—' }}</td>
+                            <td class="px-4 py-2.5 whitespace-nowrap hidden md:table-cell" :class="{ 'blur-sensitive': blurSensitive }" style="color: var(--ink-muted);">{{ $patient->contact_number ?? '—' }}</td>
                             <td class="px-4 py-2.5 whitespace-nowrap hidden lg:table-cell" style="color: var(--ink-muted);">
                                 @if ($patient->last_visit) {{ \Carbon\Carbon::parse($patient->last_visit)->format('Y-m-d') }} @else — @endif
                             </td>
@@ -106,4 +113,14 @@
         };
     }
 </script>
+
+<style>
+.blur-sensitive {
+    filter: blur(4px);
+    transition: filter 0.2s ease;
+}
+.blur-sensitive:hover {
+    filter: none;
+}
+</style>
 @endsection
