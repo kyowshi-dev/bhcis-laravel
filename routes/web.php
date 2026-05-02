@@ -52,6 +52,16 @@ Route::middleware('auth')->group(function () {
         ->name('households.create');
     Route::post('/households', [HouseholdController::class, 'store'])
         ->name('households.store');
+    Route::get('/households/{id}/edit', [HouseholdController::class, 'edit'])
+        ->name('households.edit');
+    Route::put('/households/{id}', [HouseholdController::class, 'update'])
+        ->name('households.update');
+    Route::post('/households/export/csv', [HouseholdController::class, 'exportCSV'])
+        ->name('households.export.csv');
+    Route::post('/households/export/pdf', [HouseholdController::class, 'exportPDF'])
+        ->name('households.export.pdf');
+    Route::post('/households/bulk-update-zone', [HouseholdController::class, 'updateZone'])
+        ->name('households.update-zone');
 
     // Patients
     Route::get('/patients', [PatientController::class, 'index'])->name('patients.index');
