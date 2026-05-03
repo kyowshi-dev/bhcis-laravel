@@ -42,38 +42,88 @@
         <div class="animate-in opacity-0 delay-2 p-5 lg:p-6 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Total patients</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $totalPatients }}</p>
-            <div class="mt-4 flex gap-2 flex-wrap">
-                <a href="{{ route('patients.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">View all</a>
-                <a href="{{ route('patients.create') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--accent);">Register patient</a>
-            </div>
+            @if ($totalPatients === 0)
+                <div class="space-y-3">
+                    <div class="py-6 text-center">
+                        <div style="color: var(--ink-muted); margin-bottom: 0.75rem;">
+                            <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20a9 9 0 0118 0v2h2v-2a11 11 0 00-22 0v2h2v-2z"></path></svg>
+                        </div>
+                        <p class="font-semibold text-sm" style="color: var(--ink);">No patients recorded</p>
+                        <p class="text-xs mt-1" style="color: var(--ink-muted);">Add your first patient to get started</p>
+                    </div>
+                    <a href="{{ route('patients.create') }}" class="w-full inline-flex items-center justify-center text-xs font-bold px-3 py-2 rounded-lg transition-[transform,box-shadow] duration-200 hover:shadow-sm hover:scale-[1.01]" style="background: var(--primary); color: #fff; box-shadow: var(--shadow-sm);">Register first patient</a>
+                </div>
+            @else
+                <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $totalPatients }}</p>
+                <div class="mt-4 flex gap-2 flex-wrap">
+                    <a href="{{ route('patients.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">View all</a>
+                    <a href="{{ route('patients.create') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--accent);">Register patient</a>
+                </div>
+            @endif
         </div>
         <div class="animate-in opacity-0 delay-3 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Pending appointments</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
-            <p class="text-xs mt-2" style="color: var(--ink-muted);">Open queue awaiting review</p>
-            <div class="mt-4 flex gap-2 flex-wrap">
-                <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">Manage appointments</a>
-            </div>
+            @if ($pendingAppointments === 0)
+                <div class="space-y-3">
+                    <div class="py-4 text-center">
+                        <div style="color: #10b981; margin-bottom: 0.5rem;">
+                            <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="font-semibold text-sm" style="color: var(--ink);">All caught up</p>
+                        <p class="text-xs mt-1" style="color: var(--ink-muted);">No pending appointments</p>
+                    </div>
+                    <a href="{{ route('consultations.index') }}" class="w-full inline-flex items-center justify-center text-xs font-bold px-3 py-2 rounded-lg transition-[transform,box-shadow] duration-200 hover:shadow-sm hover:scale-[1.01]" style="background: var(--accent); color: #fff; box-shadow: var(--shadow-sm);">View appointments</a>
+                </div>
+            @else
+                <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
+                <p class="text-xs mt-2" style="color: var(--ink-muted);">Open queue awaiting review</p>
+                <div class="mt-4 flex gap-2 flex-wrap">
+                    <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">Manage appointments</a>
+                </div>
+            @endif
         </div>
         <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
-             style="background: #fef2f2; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #ef4444;">
-            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: #991b1b;">Overdue immunizations</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: #b91c1c;">{{ $overdueImmunizations }}</p>
-            <p class="text-xs mt-2" style="color: #7f1d1d;">Patients needing follow-up</p>
-            <div class="mt-4 flex gap-2 flex-wrap">
-                <a href="{{ route('immunizations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #b91c1c;">View chart</a>
-            </div>
+             style="background: {{ $overdueImmunizations > 0 ? '#fef2f2' : 'var(--bg-surface)' }}; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid {{ $overdueImmunizations > 0 ? '#ef4444' : '#10b981' }};">
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: {{ $overdueImmunizations > 0 ? '#991b1b' : 'var(--ink-muted)' }};">Overdue immunizations</p>
+            @if ($overdueImmunizations === 0)
+                <div class="space-y-3">
+                    <div class="py-4 text-center">
+                        <div style="color: #10b981; margin-bottom: 0.5rem;">
+                            <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="font-semibold text-sm" style="color: var(--ink);">Schedule on track</p>
+                        <p class="text-xs mt-1" style="color: var(--ink-muted);">All immunizations current</p>
+                    </div>
+                </div>
+            @else
+                <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: #b91c1c;">{{ $overdueImmunizations }}</p>
+                <p class="text-xs mt-2" style="color: #7f1d1d;">Patients needing follow-up</p>
+                <div class="mt-4 flex gap-2 flex-wrap">
+                    <a href="{{ route('immunizations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #b91c1c;">View chart</a>
+                </div>
+            @endif
         </div>
         <div class="animate-in opacity-0 delay-5 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #f59e0b;">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Follow-up today</p>
-            <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $followUpConsultationsToday }}</p>
-            <p class="text-xs mt-2" style="color: var(--ink-muted);">Follow-up visits scheduled</p>
-            <div class="mt-4 flex gap-2 flex-wrap">
-                <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #f59e0b;">Review follow-up</a>
-            </div>
+            @if ($followUpConsultationsToday === 0)
+                <div class="space-y-3">
+                    <div class="py-4 text-center">
+                        <div style="color: #f59e0b; margin-bottom: 0.5rem;">
+                            <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="font-semibold text-sm" style="color: var(--ink);">No follow-ups scheduled</p>
+                        <p class="text-xs mt-1" style="color: var(--ink-muted);">Nothing due today</p>
+                    </div>
+                </div>
+            @else
+                <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $followUpConsultationsToday }}</p>
+                <p class="text-xs mt-2" style="color: var(--ink-muted);">Follow-up visits scheduled</p>
+                <div class="mt-4 flex gap-2 flex-wrap">
+                    <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #f59e0b;">Review follow-up</a>
+                </div>
+            @endif
         </div>
         <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
@@ -213,7 +263,15 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-sm" style="color: var(--ink-muted);">No staff listed.</div>
+                        <div class="py-8 text-center space-y-3">
+                            <div style="color: var(--ink-muted);">
+                                <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292m0-5.292H8.646A4 4 0 0012 4.354zm0 0h3.354A4 4 0 0012 4.354m0 5.292L15.354 7.354M12 9.646l-3.354 2.292m0 0A4 4 0 004.354 12m0 0h5.292m-5.292 0a4 4 0 100 5.292m5.292 0H8.646m3.354-2.292l3.354 2.292m0 0A4 4 0 0019.646 12m0 0v5.292m0-5.292h-5.292"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold" style="color: var(--ink);">No staff data</p>
+                                <p class="text-xs mt-1" style="color: var(--ink-muted);">Add health workers to see them here</p>
+                            </div>
+                        </div>
                     @endforelse
                 </div>
             </div>
