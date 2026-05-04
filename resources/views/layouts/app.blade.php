@@ -10,6 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
     /* Fonts */
@@ -106,7 +107,7 @@
     <div class="relative z-10 flex min-h-screen">
         <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-40 bg-black/40 lg:hidden" style="display: none;"></div>
 
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="transform fixed lg:static top-0 h-screen lg:h-screen overflow-y-auto w-64 shrink-0 flex flex-col z-50 transition-transform duration-300 ease-out border-r border-[var(--border)]" style="background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="transform fixed lg:sticky top-0 h-screen overflow-y-auto w-64 shrink-0 flex flex-col z-50 transition-transform duration-300 ease-out border-r border-[var(--border)]" style="background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
             <div class="flex items-center justify-between p-4 lg:p-5 border-b border-[var(--border)]">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
                     <div class="logo-mark">
@@ -292,8 +293,8 @@
             </nav>
         </aside>
 
-        <div class="flex-1 flex flex-col min-w-0">
-            <header class="shrink-0 flex justify-between items-center px-4 lg:px-6 py-3 border-b border-[var(--border)]" style="background: var(--bg-surface);">
+        <div class="flex-1 flex flex-col min-w-0" x-data="{ headerSticky: false }" @scroll.window="headerSticky = window.scrollY > 275">
+            <header :class="{ 'sticky top-0': headerSticky }" class="z-40 shrink-0 flex justify-between items-center px-4 lg:px-6 py-3 border-b border-[var(--border)] transition-all duration-200" style="background: var(--bg-surface);">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg hover:bg-black/5 transition-[background]" style="color: var(--ink-muted);">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>

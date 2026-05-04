@@ -13,7 +13,7 @@
     ];
 @endphp
 
-<div class="space-y-6 lg:space-y-8">
+<div class="space-y-4 lg:space-y-6">
     <div class="animate-in opacity-0 delay-1 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
             <h1 class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">Dashboard</h1>
@@ -38,8 +38,8 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-        <div class="animate-in opacity-0 delay-2 p-5 lg:p-6 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div class="animate-in opacity-0 delay-2 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Total patients</p>
             @if ($totalPatients === 0)
@@ -55,13 +55,13 @@
                 </div>
             @else
                 <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $totalPatients }}</p>
-                <div class="mt-4 flex gap-2 flex-wrap">
+                <div class="mt-3 flex gap-2 flex-wrap">
                     <a href="{{ route('patients.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">View all</a>
                     <a href="{{ route('patients.create') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--accent);">Register patient</a>
                 </div>
             @endif
         </div>
-        <div class="animate-in opacity-0 delay-3 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+        <div class="animate-in opacity-0 delay-3 p-3 lg:p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent);">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Pending appointments</p>
             @if ($pendingAppointments === 0)
@@ -78,13 +78,13 @@
             @else
                 <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $pendingAppointments }}</p>
                 <p class="text-xs mt-2" style="color: var(--ink-muted);">Open queue awaiting review</p>
-                <div class="mt-4 flex gap-2 flex-wrap">
+                <div class="mt-3 flex gap-2 flex-wrap">
                     <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">Manage appointments</a>
                 </div>
             @endif
         </div>
-        <div class="animate-in opacity-0 delay-4 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
-             style="background: {{ $overdueImmunizations > 0 ? '#fef2f2' : 'var(--bg-surface)' }}; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid {{ $overdueImmunizations > 0 ? '#ef4444' : '#10b981' }};">
+        <div class="animate-in opacity-0 delay-4 p-3 lg:p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+             style="background: {{ $overdueImmunizations > 0 ? '#fef2f2' : 'var(--bg-surface)' }}; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid {{ $overdueImmunizations > 0 ? '#ef4444' : '#10b981' }};"
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: {{ $overdueImmunizations > 0 ? '#991b1b' : 'var(--ink-muted)' }};">Overdue immunizations</p>
             @if ($overdueImmunizations === 0)
                 <div class="space-y-3">
@@ -99,12 +99,12 @@
             @else
                 <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: #b91c1c;">{{ $overdueImmunizations }}</p>
                 <p class="text-xs mt-2" style="color: #7f1d1d;">Patients needing follow-up</p>
-                <div class="mt-4 flex gap-2 flex-wrap">
+                <div class="mt-3 flex gap-2 flex-wrap">
                     <a href="{{ route('immunizations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #b91c1c;">View chart</a>
                 </div>
             @endif
         </div>
-        <div class="animate-in opacity-0 delay-5 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
+        <div class="animate-in opacity-0 delay-5 p-3 lg:p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid #f59e0b;">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Follow-up today</p>
             @if ($followUpConsultationsToday === 0)
@@ -120,7 +120,7 @@
             @else
                 <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $followUpConsultationsToday }}</p>
                 <p class="text-xs mt-2" style="color: var(--ink-muted);">Follow-up visits scheduled</p>
-                <div class="mt-4 flex gap-2 flex-wrap">
+                <div class="mt-3 flex gap-2 flex-wrap">
                     <a href="{{ route('consultations.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #f59e0b;">Review follow-up</a>
                 </div>
             @endif
@@ -137,16 +137,16 @@
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: #92400e;">Pending password resets</p>
             <p class="font-display font-semibold text-xl lg:text-2xl" style="color: #92400e;">{{ $pendingPasswordResets }}</p>
             <p class="text-xs mt-2" style="color: #78350f;">Users awaiting password reset</p>
-            <div class="mt-4 flex gap-2 flex-wrap">
+            <div class="mt-3 flex gap-2 flex-wrap">
                 <a href="{{ route('users.password-reset-requests') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #f59e0b;">Review requests</a>
             </div>
         </div>
         @endif
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-        <div class="lg:col-span-8 space-y-4 lg:space-y-6">
-            <div class="animate-in opacity-0 delay-5 rounded-xl border p-5 lg:p-6"
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-5">
+        <div class="lg:col-span-8 space-y-3 lg:space-y-5">
+            <div class="animate-in opacity-0 delay-5 rounded-xl border p-4 lg:p-5"
                  style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm);">
                 <div class="flex items-center justify-between gap-4">
                     <div>
@@ -159,7 +159,7 @@
                     </span>
                 </div>
 
-                <div class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <div class="mt-3 grid grid-cols-2 sm:grid-cols-5 gap-3">
                     @foreach ($schedule as $slot)
                         @php
                             $isCurrentDay = strtolower($slot['day']) === strtolower($weekdayLabel);
@@ -182,13 +182,13 @@
                     @endforeach
                 </div>
 
-                <div class="mt-4 rounded-xl border px-4 py-3 text-xs"
+                <div class="mt-3 rounded-xl border px-4 py-3 text-xs"
                      style="background: rgba(0,0,0,0.02); border-color: var(--border); color: var(--ink-muted);">
                     Emergency cases are handled daily. Please coordinate with the RHU on-duty for urgent concerns.
                 </div>
             </div>
 
-            <div class="animate-in opacity-0 delay-6 rounded-xl border p-5 lg:p-6"
+            <div class="animate-in opacity-0 delay-6 rounded-xl border p-4 lg:p-5"
                  style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm);">
                 <h2 class="font-display font-semibold text-lg lg:text-xl mb-4" style="color: var(--ink);">Recent activity</h2>
                 <ul class="divide-y divide-[var(--border)] space-y-0">
@@ -229,28 +229,28 @@
             </div>
         </div>
 
-        <div class="lg:col-span-4 space-y-4 lg:space-y-6">
-            <div class="animate-in opacity-0 delay-5 rounded-xl border p-5 lg:p-6"
+        <div class="lg:col-span-4 space-y-3 lg:space-y-5">
+            <div class="animate-in opacity-0 delay-5 rounded-xl border p-4 lg:p-5"
                  style="background: var(--primary); border-color: rgba(255,255,255,0.14); box-shadow: var(--shadow-md);">
                 <h3 class="font-display font-semibold text-lg" style="color: #fff;">Health Advisory</h3>
                 <p class="text-sm mt-2" style="color: rgba(255,255,255,0.88);">
                     Dengue awareness month is approaching. Please ensure all residents are practicing the 4S strategy in their households.
                 </p>
                 <a href="{{ route('reports.index') }}"
-                   class="inline-flex items-center mt-4 px-3.5 py-2 rounded-xl text-xs font-semibold transition-[transform,box-shadow] duration-200 hover:shadow-md hover:scale-[1.01]"
+                   class="inline-flex items-center mt-3 px-3.5 py-2 rounded-xl text-xs font-semibold transition-[transform,box-shadow] duration-200 hover:shadow-md hover:scale-[1.01]"
                    style="background: rgba(255,255,255,0.14); color: #fff;">
                     Read guidelines
                 </a>
             </div>
 
-            <div class="animate-in opacity-0 delay-6 rounded-xl border p-5 lg:p-6"
+            <div class="animate-in opacity-0 delay-6 rounded-xl border p-4 lg:p-5"
                  style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm);">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-semibold uppercase tracking-wider" style="color: var(--ink-muted);">On-duty staff</h3>
                     <span class="text-xs" style="color: var(--ink-subtle);">Today</span>
                 </div>
 
-                <div class="mt-4 max-h-60 overflow-y-auto space-y-3">
+                <div class="mt-3 max-h-60 overflow-y-auto space-y-3">
                     @forelse ($onDutyStaff as $staff)
                         <div class="flex items-center gap-3">
                             <div class="h-9 w-9 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
