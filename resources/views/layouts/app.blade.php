@@ -149,65 +149,36 @@
 
                 <!-- Dashboard -->
                 <a href="{{ route('dashboard') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="3" width="6" height="4" rx="1"></rect>
-                        <path d="M5 7h14v14H5z"></path>
-                        <path d="M9 11h6"></path>
-                    </svg>
+                    <i class="fa-solid fa-house text-base opacity-70" aria-hidden="true"></i>
                     <span>Dashboard</span>
                 </a>
 
                 <!-- Patient Care Dropdown -->
                 <div>
                     <button @click="patientCareOpen = !patientCareOpen" :class="{ 'bg-opacity-100': patientCareOpen }" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200 hover:opacity-100" style="color: var(--ink-muted);">
-                        <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
+                        <i class="fa-solid fa-user-doctor text-base opacity-70" aria-hidden="true"></i>
                         <span class="flex-1 text-left">Patient Care</span>
-                        <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': patientCareOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9l6 6 6-6"></path>
-                        </svg>
+                        <i class="fa-solid fa-chevron-down text-sm transition-transform duration-200" :class="{ 'rotate-180': patientCareOpen }" aria-hidden="true"></i>
                     </button>
                     <div x-show="patientCareOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1" class="mt-1 ml-2 pl-3 border-l space-y-0.5" style="border-color: var(--border);">
                         <a href="{{ route('households.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('household')) disabled @endif" @if(!$authUser->hasPermission('household')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                            <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M3 10.5 12 3l9 7.5"></path>
-                                <path d="M5 10v11h14V10"></path>
-                                <path d="M10 21v-7h4v7"></path>
-                            </svg>
+                            <i class="fa-solid fa-house-chimney text-sm opacity-70" aria-hidden="true"></i>
                             <span>Households</span>
                         </a>
                         <a href="{{ url('/patients') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('patients')) disabled @endif" @if(!$authUser->hasPermission('patients')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                            <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                            </svg>
+                            <i class="fa-solid fa-user-injured text-sm opacity-70" aria-hidden="true"></i>
                             <span>Patients</span>
                         </a>
                         <a href="{{ route('consultations.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('consultations')) disabled @endif" @if(!$authUser->hasPermission('consultations')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                            <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="M21 21l-4.35-4.35"></path>
-                            </svg>
+                            <i class="fa-solid fa-stethoscope text-sm opacity-70" aria-hidden="true"></i>
                             <span>Consultations</span>
                         </a>
                         <a href="{{ route('immunizations.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('immunizations')) disabled @endif" @if(!$authUser->hasPermission('immunizations')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                            <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M10 3h4v4h4v4h-4v4h-4v-4H6V7h4z"></path>
-                            </svg>
+                            <i class="fa-solid fa-syringe text-sm opacity-70" aria-hidden="true"></i>
                             <span>Immunization</span>
                         </a>
                         <a href="{{ route('lab_requests.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('lab_requests')) disabled @endif" @if(!$authUser->hasPermission('lab_requests')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                            <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M9 12l2 2 4-4"></path>
-                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
-                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
-                                <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"></path>
-                                <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"></path>
-                            </svg>
+                            <i class="fa-solid fa-vials text-sm opacity-70" aria-hidden="true"></i>
                             <span>Lab Requests</span>
                         </a>
                     </div>
@@ -217,31 +188,20 @@
                 @if ($authUser && ($authUser->hasPermission('medicines') || $authUser->hasPermission('reports')))
                     <div>
                         <button @click="managementOpen = !managementOpen" :class="{ 'bg-opacity-100': managementOpen }" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200 hover:opacity-100" style="color: var(--ink-muted);">
-                            <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
-                                <rect x="10" y="6" width="4" height="8" rx="1"></rect>
-                            </svg>
+                            <i class="fa-solid fa-layer-group text-base opacity-70" aria-hidden="true"></i>
                             <span class="flex-1 text-left">Management</span>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': managementOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 9l6 6 6-6"></path>
-                            </svg>
+                            <i class="fa-solid fa-chevron-down text-sm transition-transform duration-200" :class="{ 'rotate-180': managementOpen }" aria-hidden="true"></i>
                         </button>
                         <div x-show="managementOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1" class="mt-1 ml-2 pl-3 border-l space-y-0.5" style="border-color: var(--border);">
                             @if ($authUser && $authUser->hasPermission('medicines'))
                                 <a href="{{ route('medicines.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('medicines')) disabled @endif" @if(!$authUser->hasPermission('medicines')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                                    <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M10.5 6h2.25v.75h-2.25V6zm0 3h2.25v.75h-2.25V9zm0 3h2.25v.75h-2.25v-.75z"></path>
-                                        <path d="M17 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"></path>
-                                    </svg>
+                                    <i class="fa-solid fa-pills text-sm opacity-70" aria-hidden="true"></i>
                                     <span>Medicines</span>
                                 </a>
                             @endif
                             @if ($authUser && $authUser->hasPermission('reports'))
                                 <a href="{{ route('reports.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('reports')) disabled @endif" @if(!$authUser->hasPermission('reports')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                                    <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M3 3v18h18"></path>
-                                        <path d="M7 14l2-2 3 3 5-5"></path>
-                                    </svg>
+                                    <i class="fa-solid fa-file-lines text-sm opacity-70" aria-hidden="true"></i>
                                     <span>Reports</span>
                                 </a>
                             @endif
@@ -253,20 +213,13 @@
                 @if ($authUser && $authUser->hasPermission('users'))
                     <div>
                         <button @click="adminOpen = !adminOpen" :class="{ 'bg-opacity-100': adminOpen }" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200 hover:opacity-100" style="color: var(--ink-muted);">
-                            <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"></path>
-                            </svg>
+                            <i class="fa-solid fa-user-gear text-base opacity-70" aria-hidden="true"></i>
                             <span class="flex-1 text-left">Administration</span>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': adminOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 9l6 6 6-6"></path>
-                            </svg>
+                            <i class="fa-solid fa-chevron-down text-sm transition-transform duration-200" :class="{ 'rotate-180': adminOpen }" aria-hidden="true"></i>
                         </button>
                         <div x-show="adminOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1" class="mt-1 ml-2 pl-3 border-l space-y-0.5" style="border-color: var(--border);">
                             <a href="{{ route('users.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('users')) disabled @endif" @if(!$authUser->hasPermission('users')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
-                                <svg class="w-4 h-4 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
+                                <i class="fa-solid fa-users text-sm opacity-70" aria-hidden="true"></i>
                                 <span>User Management</span>
                             </a>
                         </div>
@@ -275,19 +228,13 @@
 
                 <!-- Profile Management -->
                 <a href="{{ route('profile.show') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <i class="fa-solid fa-user text-base opacity-70" aria-hidden="true"></i>
                     <span>Profile</span>
                 </a>
 
                 <!-- Settings -->
                 <a href="{{ route('settings.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 0 0 2.572-1.065z"></path>
-                        <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
-                    </svg>
+                    <i class="fa-solid fa-gear text-base opacity-70" aria-hidden="true"></i>
                     <span>Settings</span>
                 </a>
             </nav>
