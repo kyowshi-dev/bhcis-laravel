@@ -33,6 +33,10 @@ class Patient extends Model
         'has_nhts',
     ];
 
+    public const FAMILY_RELATIONSHIP_OPTIONS = ['Father', 'Son', 'Mother', 'Daughter', 'Others'];
+    public const PHILHEALTH_MEMBERSHIP_CATEGORIES = ['FE - Private', 'FE - Government', 'IE', 'Others'];
+    public const PHILHEALTH_STATUS_TYPES = ['Member', 'Dependent'];
+
     protected $casts = [
         'date_of_birth' => 'date',
         'has_4ps' => 'boolean',

@@ -17,32 +17,10 @@
         <h1 class="text-xl lg:text-2xl font-bold text-gray-800">PATIENT ENROLLMENT RECORD </h1>
     </div>
 
-    <form action="{{ route('patients.store') }}" method="POST" class="bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8" x-data="patientCreateTabs()" x-init="init()">
+    <form action="{{ route('patients.store') }}" method="POST" class="bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8" x-data="{ isPhilhealthMember: '{{ old('is_philhealth_member', 'n') }}' }">
         @csrf
 
-        {{-- Tabbed layout to reduce vertical scrolling --}}
-        <div class="flex flex-wrap gap-2 border-b border-gray-100 pb-4">
-            <button type="button"
-                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
-                    :class="tab === 'household' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
-                    @click="tab = 'household'">
-                Household
-            </button>
-            <button type="button"
-                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
-                    :class="tab === 'personal' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
-                    @click="tab = 'personal'">
-                Personal Info
-            </button>
-            <button type="button"
-                    class="px-3 lg:px-4 py-1.5 rounded-xl text-xs lg:text-sm font-semibold border transition"
-                    :class="tab === 'social' ? 'bg-sky-50 border-sky-300 text-sky-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'"
-                    @click="tab = 'social'">
-                Social Status
-            </button>
-        </div>
-
-        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'household'" x-cloak>
+        <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">🏠</span>
                 Household Information
@@ -194,7 +172,7 @@
             </div>
         </div>
 
-        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'personal'" x-cloak>
+        <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">👤</span>
                 Personal Information
@@ -240,7 +218,7 @@
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">Family Relationship <span class="text-red-500">*</span></label>
                     <select name="family_relationship" class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('family_relationship') border-red-500 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
                         <option value="">Select relationship</option>
-                        @foreach(['Father', 'Son', 'Mother', 'Daughter', 'Others'] as $relationship)
+                        @foreach(\App\Models\Patient::FAMILY_RELATIONSHIP_OPTIONS as $relationship)
                             <option value="{{ $relationship }}" {{ old('family_relationship') === $relationship ? 'selected' : '' }}>{{ $relationship }}</option>
                         @endforeach
                     </select>
@@ -284,7 +262,7 @@
             </div>
         </div>
 
-        <div class="pb-4 lg:pb-6 border-b border-gray-100" x-show="tab === 'social'" x-cloak>
+        <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
                 <span class="mr-2">💼</span>
                 Socio-Economic Status
@@ -320,11 +298,11 @@
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">PhilHealth Member?</label>
                     <div class="flex items-center gap-4">
                         <label class="inline-flex items-center gap-2 text-sm text-gray-700">
-                            <input type="radio" name="is_philhealth_member" value="y" {{ old('is_philhealth_member') === 'y' ? 'checked' : '' }} class="h-4 w-4 text-sky-600 border-gray-300 focus:ring-sky-500">
+                            <input type="radio" name="is_philhealth_member" value="y" x-model="isPhilhealthMember" {{ old('is_philhealth_member') === 'y' ? 'checked' : '' }} class="h-4 w-4 text-sky-600 border-gray-300 focus:ring-sky-500">
                             <span>Yes</span>
                         </label>
                         <label class="inline-flex items-center gap-2 text-sm text-gray-700">
-                            <input type="radio" name="is_philhealth_member" value="n" {{ old('is_philhealth_member', 'n') === 'n' ? 'checked' : '' }} class="h-4 w-4 text-sky-600 border-gray-300 focus:ring-sky-500">
+                            <input type="radio" name="is_philhealth_member" value="n" x-model="isPhilhealthMember" {{ old('is_philhealth_member', 'n') === 'n' ? 'checked' : '' }} class="h-4 w-4 text-sky-600 border-gray-300 focus:ring-sky-500">
                             <span>No</span>
                         </label>
                     </div>
@@ -334,6 +312,9 @@
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">PhilHealth Number</label>
                     <input type="text" name="philhealth_no" value="{{ old('philhealth_no') }}"
                            placeholder="12-123456789-0"
+                           :disabled="isPhilhealthMember !== 'y'"
+                           x-bind:class="isPhilhealthMember !== 'y' ? 'opacity-50 bg-gray-50 cursor-not-allowed' : ''"
+                           x-bind:required="isPhilhealthMember === 'y'"
                            class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('philhealth_no') border-red-500 bg-red-50 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
                     @error('philhealth_no') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -342,9 +323,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4 mb-4">
                 <div>
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">Membership Category</label>
-                    <select name="membership_category" class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('membership_category') border-red-500 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
+                    <select name="membership_category"
+                            :disabled="isPhilhealthMember !== 'y'"
+                            x-bind:class="isPhilhealthMember !== 'y' ? 'opacity-50 cursor-not-allowed' : ''"
+                            x-bind:required="isPhilhealthMember === 'y'"
+                            class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('membership_category') border-red-500 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
                         <option value="">Select category</option>
-                        @foreach(['FE - Private', 'FE - Government', 'IE', 'Others'] as $category)
+                        @foreach(\App\Models\Patient::PHILHEALTH_MEMBERSHIP_CATEGORIES as $category)
                             <option value="{{ $category }}" {{ old('membership_category') === $category ? 'selected' : '' }}>{{ $category }}</option>
                         @endforeach
                     </select>
@@ -352,9 +337,13 @@
                 </div>
                 <div>
                     <label class="block text-xs uppercase text-gray-500 font-bold mb-1">PhilHealth Status</label>
-                    <select name="status_type" class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('status_type') border-red-500 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
+                    <select name="status_type"
+                            :disabled="isPhilhealthMember !== 'y'"
+                            x-bind:class="isPhilhealthMember !== 'y' ? 'opacity-50 cursor-not-allowed' : ''"
+                            x-bind:required="isPhilhealthMember === 'y'"
+                            class="w-full px-3 lg:px-4 py-2 rounded-xl border @error('status_type') border-red-500 @else border-gray-300 @enderror focus:ring-sky-500 focus:border-sky-500 text-sm">
                         <option value="">Select status</option>
-                        @foreach(['Member', 'Dependent'] as $status)
+                        @foreach(\App\Models\Patient::PHILHEALTH_STATUS_TYPES as $status)
                             <option value="{{ $status }}" {{ old('status_type') === $status ? 'selected' : '' }}>{{ $status }}</option>
                         @endforeach
                     </select>
@@ -404,15 +393,6 @@
     </form>
 
     <script>
-        function patientCreateTabs() {
-            return {
-                tab: 'household',
-                init() {
-                    this.tab = 'household';
-                },
-            };
-        }
-
         function householdAutocomplete({ initialId, initialText, transientId, transientLabel }) {
             return {
                 query: initialText || '',

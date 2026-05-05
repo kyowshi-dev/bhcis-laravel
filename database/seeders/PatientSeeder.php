@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,7 @@ class PatientSeeder extends Seeder
             $isPhilhealthMember = rand(0, 1) === 1;
             $isPcbMember = rand(0, 1) === 1;
             $zoneNumber = $zoneNumbers[$zoneId] ?? $zoneId;
-            $relationshipOptions = ['Father', 'Son', 'Mother', 'Daughter', 'Others'];
+            $relationshipOptions = Patient::FAMILY_RELATIONSHIP_OPTIONS;
 
             $patients[] = [
                 'household_id' => $householdId,
@@ -67,9 +68,9 @@ class PatientSeeder extends Seeder
                 'family_relationship' => $relationshipOptions[array_rand($relationshipOptions)],
                 'residential_address' => $zoneNumber . ' Sta. Ana, Tagoloan',
                 'is_philhealth_member' => $isPhilhealthMember ? 'y' : 'n',
-                'status_type' => $isPhilhealthMember ? (rand(0, 1) ? 'Member' : 'Dependent') : null,
+                'status_type' => $isPhilhealthMember ? Patient::PHILHEALTH_STATUS_TYPES[array_rand(Patient::PHILHEALTH_STATUS_TYPES)] : null,
                 'philhealth_no' => $isPhilhealthMember ? sprintf('%02d-%09d-%d', rand(10, 99), rand(100000000, 999999999), rand(0, 9)) : null,
-                'membership_category' => $isPhilhealthMember ? ['FE - Private', 'FE - Government', 'IE', 'Others'][rand(0, 3)] : null,
+                'membership_category' => $isPhilhealthMember ? Patient::PHILHEALTH_MEMBERSHIP_CATEGORIES[array_rand(Patient::PHILHEALTH_MEMBERSHIP_CATEGORIES)] : null,
                 'is_pcb_member' => $isPcbMember ? 'y' : 'n',
                 'has_4ps' => rand(0, 1),
                 'has_nhts' => rand(0, 1),
