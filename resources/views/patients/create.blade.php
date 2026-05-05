@@ -17,12 +17,12 @@
         <h1 class="text-xl lg:text-2xl font-bold text-gray-800">PATIENT ENROLLMENT RECORD </h1>
     </div>
 
-    <form action="{{ route('patients.store') }}" method="POST" class="bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8" x-data="{ isPhilhealthMember: '{{ old('is_philhealth_member', 'n') }}' }">
+    <form action="{{ route('patients.store') }}" method="POST" class="mt-0 bg-white p-4 lg:p-6 xl:p-8 rounded-xl lg:rounded-lg shadow-sm border border-gray-200 space-y-6 lg:space-y-8" x-data="{ isPhilhealthMember: '{{ old('is_philhealth_member', 'n') }}' }">
         @csrf
 
         <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
-                <span class="mr-2">🏠</span>
+                <span class="mr-2"></span>
                 Household Information
             </h3>
             
@@ -174,7 +174,7 @@
 
         <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
-                <span class="mr-2">👤</span>
+                <span class="mr-2"></span>
                 Personal Information
             </h3>
             
@@ -264,7 +264,7 @@
 
         <div class="pb-4 lg:pb-6 border-b border-gray-100">
             <h3 class="text-sm lg:text-base font-semibold text-sky-700 mb-3 lg:mb-4 flex items-center">
-                <span class="mr-2">💼</span>
+                <span class="mr-2"></span>
                 Socio-Economic Status
             </h3>
 
