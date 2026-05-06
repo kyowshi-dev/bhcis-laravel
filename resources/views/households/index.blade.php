@@ -83,8 +83,8 @@
                             style="border-color: var(--border); background: var(--bg-surface);">
                         <option value="">All zones</option>
                         @foreach ($zones as $zone)
-                            <option value="{{ $zone->id }}" {{ $zone_id == $zone->id ? 'selected' : '' }}>
-                                Zone {{ $zone->zone_number }}
+                            <option value={{ $zone_id == $zone->id ? 'selected' : '' }}>
+                                {{ $zone->zone_number }}
                             </option>
                         @endforeach
                     </select>

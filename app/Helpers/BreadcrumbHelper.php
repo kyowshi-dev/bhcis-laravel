@@ -44,7 +44,7 @@ class BreadcrumbHelper
                 $breadcrumbs = [
                     ['name' => 'Dashboard', 'url' => route('dashboard')],
                     ['name' => 'Patients', 'url' => route('patients.index')],
-                    ['name' => 'Add Patient', 'url' => null],
+                    ['name' => 'Patient Enrollment Form', 'url' => null],
                 ];
                 break;
 

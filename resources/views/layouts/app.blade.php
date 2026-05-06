@@ -241,7 +241,7 @@
         </aside>
 
         <div class="flex-1 flex flex-col min-w-0" x-data="{ headerSticky: false }" @scroll.window="headerSticky = window.scrollY > 275">
-            <header :class="{ 'sticky top-0': headerSticky }" class="z-40 shrink-0 flex justify-between items-center px-4 lg:px-6 py-3 border-b border-[var(--border)] transition-all duration-200" style="background: var(--bg-surface);">
+            <header :class="{ 'sticky top-0': headerSticky }" class="z-40 shrink-0 flex justify-between items-center px-4 lg:px-6 py-1 border-b border-[var(--border)] transition-all duration-200" style="background: var(--bg-surface);">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg hover:bg-black/5 transition-[background]" style="color: var(--ink-muted);">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
@@ -256,7 +256,7 @@
                             <button type="button"
                                     @click="profileOpen = !profileOpen"
                                     @click.away="profileOpen = false"
-                                    class="flex items-center gap-3 rounded-xl border px-3 py-2 hover:shadow-sm transition-[background,transform,box-shadow] duration-200"
+                                    class="flex items-center gap-3 rounded-xl px-3 py-2 hover:shadow-sm transition-[background,transform,box-shadow] duration-200"
                                     style="background: var(--bg-surface); border-color: var(--border); color: var(--ink-muted);">
                                 <span class="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold"
                                       style="background: var(--teal-soft); color: var(--primary);">
@@ -323,7 +323,7 @@
                         $breadcrumbs = \App\Helpers\BreadcrumbHelper::getBreadcrumbs();
                     @endphp
                     @if(count($breadcrumbs) > 1)
-                        <nav class="flex items-center gap-2 mb-6 text-sm animate-in opacity-0 delay-1" aria-label="Breadcrumb">
+                        <nav class="flex items-center gap-2 mb-3 animate-in opacity-0 delay-1" aria-label="Breadcrumb">
                             @foreach($breadcrumbs as $index => $crumb)
                                 @if($index > 0)
                                     <svg class="w-4 h-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
