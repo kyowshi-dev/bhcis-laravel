@@ -44,13 +44,6 @@
         </div>
     </form>
 
-    <div class="flex justify-end">
-        <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" x-model="blurSensitive" class="rounded border" style="border-color: var(--border);">
-            <span class="text-sm" style="color: var(--ink-muted);">Blur Sensitive Info</span>
-        </label>
-    </div>
-
     <div class="space-y-3 lg:space-y-4">
         @forelse ($consultations as $consultation)
             @php
@@ -77,10 +70,7 @@
                             <div class="flex items-center gap-1">
                                 <a href="{{ route('consultations.show', $consultation->id) }}" class="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition hover:opacity-80" style="background: var(--primary-soft); color: var(--primary);">👁 View</a>
                                 <a href="{{ route('consultations.edit', $consultation->id) }}" class="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition hover:opacity-80" style="background: var(--amber-soft); color: var(--amber);">✎ Edit</a>
-                                <form action="{{ route('consultations.export', $consultation->id) }}" method="POST" class="inline" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition hover:opacity-80" style="background: var(--teal-soft); color: var(--teal); border: none; cursor: pointer;">📄 PDF</button>
-                                </form>
+
                             </div>
                         </div>
                     </div>

@@ -142,7 +142,7 @@
                 autocorrect: 'off'
             },
             showCancelButton: true,
-            confirmButtonColor: '#10b981',
+            confirmButtonColor: 'var(--primary)',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Enable User',
             cancelButtonText: 'Cancel',

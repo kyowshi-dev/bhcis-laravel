@@ -81,9 +81,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/patients/{id}/consultations/create', [ConsultationController::class, 'create'])->name('consultations.create');
     Route::post('/patients/{id}/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
 
-    // Quick Edit & Export for Consultations
+    // Quick Edit for Consultations
     Route::get('/consultations/{id}/edit', [ConsultationController::class, 'edit'])->name('consultations.edit');
-    Route::post('/consultations/{id}/export', [ConsultationController::class, 'export'])->name('consultations.export');
 
     // Doctor's Workspace (View specific consultation)
     Route::get('/consultations/{id}', [ConsultationController::class, 'show'])

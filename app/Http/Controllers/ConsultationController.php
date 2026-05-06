@@ -348,57 +348,5 @@ class ConsultationController extends Controller
         ]);
     }
 
-    // Export Consultation to PDF
-    public function export($id)
-    {
-        if (! auth()->user()->hasPermission('consultations')) {
-            abort(403, 'Unauthorized');
-        }
-
-        $consultation = DB::table('consultations')
-            ->join('patients', 'consultations.patient_id', '=', 'patients.id')
-            ->join('health_workers', 'consultations.worker_id', '=', 'health_workers.id')
-            ->where('consultations.id', $id)
-            ->select(
-                'consultations.*',
-                'patients.first_name as patient_first_name',
-                'patients.last_name as patient_last_name',
-                'patients.date_of_birth as patient_dob',
-                'patients.sex as patient_sex',
-                'health_workers.first_name as worker_first_name',
-                'health_workers.last_name as worker_last_name',
-                'health_workers.position as worker_position'
-            )
-            ->first();
-
-        if (! $consultation) {
-            abort(404, 'Consultation not found');
-        }
-
-        // Get diagnoses
-        $diagnoses = DB::table('diagnosis_records')
-            ->join('diagnosis_lookup', 'diagnosis_records.diagnosis_id', '=', 'diagnosis_lookup.id')
-            ->where('diagnosis_records.consultation_id', $id)
-            ->select('diagnosis_lookup.diagnosis_name', 'diagnosis_records.remarks')
-            ->get();
-
-        // Get prescriptions
-        $prescriptions = DB::table('prescriptions')
-            ->join('medicines_lookup', 'prescriptions.medicine_id', '=', 'medicines_lookup.id')
-            ->where('prescriptions.consultation_id', $id)
-            ->select('medicines_lookup.medicine_name', 'prescriptions.dosage', 'prescriptions.frequency', 'prescriptions.duration', 'prescriptions.quantity')
-            ->get();
-
-        // Get vitals
-        $vitals = DB::table('vitals')->where('consultation_id', $id)->first();
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdfs.consultation_summary', [
-            'consultation' => $consultation,
-            'diagnoses' => $diagnoses,
-            'prescriptions' => $prescriptions,
-            'vitals' => $vitals,
-        ]);
-
-        return $pdf->stream('consultation-' . $consultation->id . '.pdf');
-    }
 }
+

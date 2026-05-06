@@ -139,10 +139,6 @@
                 
                 <div class="space-y-2">
                     <a href="{{ route('consultations.show', $consultation->id) }}" class="block w-full px-4 py-2 rounded-lg text-center text-sm font-semibold transition" style="background: var(--primary-soft); color: var(--primary);">👁 View Full Record</a>
-                    <form action="{{ route('consultations.export', $consultation->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="w-full px-4 py-2 rounded-lg text-center text-sm font-semibold transition" style="background: var(--teal-soft); color: var(--teal); border: none; cursor: pointer;">📄 Export as PDF</button>
-                    </form>
                 </div>
             </div>
         </div>
