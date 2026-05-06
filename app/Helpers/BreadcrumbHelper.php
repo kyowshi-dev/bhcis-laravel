@@ -36,7 +36,7 @@ class BreadcrumbHelper
             case 'patients.index':
                 $breadcrumbs = [
                     ['name' => 'Dashboard', 'url' => route('dashboard')],
-                    ['name' => 'Patients', 'url' => null],
+                    ['name' => 'Individual Health Records', 'url' => null],
                 ];
                 break;
 

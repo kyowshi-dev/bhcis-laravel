@@ -157,29 +157,29 @@
                 <div>
                     <button @click="patientCareOpen = !patientCareOpen" :class="{ 'bg-opacity-100': patientCareOpen }" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200 hover:opacity-100" style="color: var(--ink-muted);">
                         <i class="fa-solid fa-user-doctor text-base opacity-70" aria-hidden="true"></i>
-                        <span class="flex-1 text-left">Patient Care</span>
+                        <span class="flex-1 text-left">Medical Services</span>
                         <i class="fa-solid fa-chevron-down text-sm transition-transform duration-200" :class="{ 'rotate-180': patientCareOpen }" aria-hidden="true"></i>
                     </button>
                     <div x-show="patientCareOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-1" class="mt-1 ml-2 pl-3 border-l space-y-0.5" style="border-color: var(--border);">
                         <a href="{{ route('households.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('household')) disabled @endif" @if(!$authUser->hasPermission('household')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                             <i class="fa-solid fa-house-chimney text-sm opacity-70" aria-hidden="true"></i>
-                            <span>Households</span>
+                            <span>Household Registry</span>
                         </a>
                         <a href="{{ url('/patients') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('patients')) disabled @endif" @if(!$authUser->hasPermission('patients')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                             <i class="fa-solid fa-user-injured text-sm opacity-70" aria-hidden="true"></i>
-                            <span>Patients</span>
+                            <span>Individual Health Records</span>
                         </a>
                         <a href="{{ route('consultations.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('consultations')) disabled @endif" @if(!$authUser->hasPermission('consultations')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                             <i class="fa-solid fa-stethoscope text-sm opacity-70" aria-hidden="true"></i>
-                            <span>Consultations</span>
+                            <span>Check-ups</span>
                         </a>
                         <a href="{{ route('immunizations.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('immunizations')) disabled @endif" @if(!$authUser->hasPermission('immunizations')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                             <i class="fa-solid fa-syringe text-sm opacity-70" aria-hidden="true"></i>
-                            <span>Immunization</span>
+                            <span>EPI / Vaccinations</span>
                         </a>
                         <a href="{{ route('lab_requests.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('lab_requests')) disabled @endif" @if(!$authUser->hasPermission('lab_requests')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                             <i class="fa-solid fa-vials text-sm opacity-70" aria-hidden="true"></i>
-                            <span>Lab Requests</span>
+                            <span>Diagnostics</span>
                         </a>
                     </div>
                 </div>
@@ -196,7 +196,7 @@
                             @if ($authUser && $authUser->hasPermission('medicines'))
                                 <a href="{{ route('medicines.index') }}" class="nav-link nav-submenu flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-[background,color] duration-200 @if(!$authUser->hasPermission('medicines')) disabled @endif" @if(!$authUser->hasPermission('medicines')) onclick="Swal.fire({title: 'Unauthorized', text: 'Please contact the administrator if you believe this is a mistake.', icon: 'error'}); return false;" @endif>
                                     <i class="fa-solid fa-pills text-sm opacity-70" aria-hidden="true"></i>
-                                    <span>Medicines</span>
+                                    <span>Medicines Lists</span>
                                 </a>
                             @endif
                             @if ($authUser && $authUser->hasPermission('reports'))
@@ -225,12 +225,6 @@
                         </div>
                     </div>
                 @endif
-
-                <!-- Profile Management -->
-                <a href="{{ route('profile.show') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">
-                    <i class="fa-solid fa-user text-base opacity-70" aria-hidden="true"></i>
-                    <span>Profile</span>
-                </a>
 
                 <!-- Settings -->
                 <a href="{{ route('settings.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-[background,color] duration-200" style="color: var(--ink-muted);">

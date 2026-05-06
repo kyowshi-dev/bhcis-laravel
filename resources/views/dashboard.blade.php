@@ -41,7 +41,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <div class="animate-in opacity-0 delay-2 p-4 lg:p-5 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
-            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Total patients</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Individual Records</p>
             @if ($totalPatients === 0)
                 <div class="space-y-3">
                     <div class="py-6 text-center">
@@ -56,18 +56,18 @@
             @else
                 <p class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">{{ $totalPatients }}</p>
                 <div class="mt-3 flex gap-2 flex-wrap">
-                    <a href="{{ route('patients.index') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--primary);">View all</a>
-                    <a href="{{ route('patients.create') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: var(--accent);">Register patient</a>
+                    
+                    <a href="{{ route('patients.create') }}" class="text-xs font-bold px-2 py-1 rounded-lg border" style="border-color: var(--border); color: #0d4a3c;">Register patient</a>
                 </div>
             @endif
         </div>
         <div class="animate-in opacity-0 delay-3 p-3 lg:p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
              style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent);">
-            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Pending appointments</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: var(--ink-muted);">Pending check-ups</p>
             @if ($pendingAppointments === 0)
                 <div class="space-y-3">
                     <div class="py-4 text-center">
-                        <div style="color: #10b981; margin-bottom: 0.5rem;">
+                        <div style="color: #0d4a3c; margin-bottom: 0.5rem;">
                             <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <p class="font-semibold text-sm" style="color: var(--ink);">All caught up</p>
@@ -84,12 +84,12 @@
             @endif
         </div>
         <div class="animate-in opacity-0 delay-4 p-3 lg:p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
-             style="background: {{ $overdueImmunizations > 0 ? '#fef2f2' : 'var(--bg-surface)' }}; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid {{ $overdueImmunizations > 0 ? '#ef4444' : '#10b981' }};">
+             style="background: {{ $overdueImmunizations > 0 ? '#fef2f2' : 'var(--bg-surface)' }}; border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid {{ $overdueImmunizations > 0 ? '#ef4444' : 'var(--primary)' }};">
             <p class="text-[11px] font-semibold uppercase tracking-wider mb-2" style="color: {{ $overdueImmunizations > 0 ? '#991b1b' : 'var(--ink-muted)' }};">Overdue immunizations</p>
             @if ($overdueImmunizations === 0)
                 <div class="space-y-3">
                     <div class="py-4 text-center">
-                        <div style="color: #10b981; margin-bottom: 0.5rem;">
+                        <div style="color: var(--primary); margin-bottom: 0.5rem;">
                             <svg class="w-7 h-7 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <p class="font-semibold text-sm" style="color: var(--ink);">Schedule on track</p>

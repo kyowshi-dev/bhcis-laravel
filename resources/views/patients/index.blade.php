@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-5 lg:space-y-6" x-data="{ blurSensitive: true }">
+<div class="space-y-5 lg:space-y-6" x-data="{ blurSensitive: false }">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="font-display font-semibold text-2xl lg:text-3xl" style="color: var(--ink);">Patient records</h1>
@@ -40,12 +40,6 @@
         </div>
     </div>
 
-    <div class="flex justify-end">
-        <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" x-model="blurSensitive" class="rounded border" style="border-color: var(--border);">
-            <span class="text-sm" style="color: var(--ink-muted);">Blur Sensitive Info</span>
-        </label>
-    </div>
 
     <div class="rounded-xl border overflow-hidden" style="background: var(--bg-surface-elevated); border-color: var(--border); box-shadow: var(--shadow-sm);">
         <div class="overflow-x-auto">

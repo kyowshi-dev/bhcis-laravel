@@ -236,12 +236,7 @@
                                    title="Edit household">
                                     ✎ Edit
                                 </a>
-                                <a href="{{ route('patients.create', ['household_id' => $household->id]) }}"
-                                   class="inline-flex items-center justify-center px-2 py-1.5 rounded-lg text-[11px] font-semibold transition"
-                                   style="background: var(--teal-soft); color: var(--primary); border: 1px solid var(--border);"
-                                   title="Add household member">
-                                    + Member
-                                </a>
+                                
                             </td>
                         </tr>
                     @empty
