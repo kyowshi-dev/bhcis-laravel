@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium" style="color: var(--ink-muted);">Health Worker</p>
-                        <p class="text-sm mt-1" style="color: var(--ink);">{{ $consultation->worker_first_name }} {{ $consultation->worker_last_name }}</p>
+                        <p class="text-sm mt-1" style="color: var(--ink);">{{ trim(($consultation->worker_first_name ?? '').' '.($consultation->worker_last_name ?? '')) ?: 'Not assigned' }}</p>
                     </div>
                     <div>
                         <p class="text-xs font-medium" style="color: var(--ink-muted);">Nature of Visit</p>

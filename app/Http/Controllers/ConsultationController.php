@@ -213,7 +213,15 @@ class ConsultationController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $consultation = DB::table('consultations')->find($id);
+        $consultation = DB::table('consultations')
+            ->leftJoin('health_workers', 'consultations.health_worker_id', '=', 'health_workers.id')
+            ->where('consultations.id', $id)
+            ->select(
+                'consultations.*',
+                'health_workers.first_name as worker_first_name',
+                'health_workers.last_name as worker_last_name'
+            )
+            ->first();
 
         if (! $consultation) {
             abort(404, 'Resource not found');
@@ -331,7 +339,15 @@ class ConsultationController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $consultation = DB::table('consultations')->find($id);
+        $consultation = DB::table('consultations')
+            ->leftJoin('health_workers', 'consultations.worker_id', '=', 'health_workers.id')
+            ->where('consultations.id', $id)
+            ->select(
+                'consultations.*',
+                'health_workers.first_name as worker_first_name',
+                'health_workers.last_name as worker_last_name'
+            )
+            ->first();
 
         if (! $consultation) {
             abort(404, 'Consultation not found');
