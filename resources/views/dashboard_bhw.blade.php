@@ -85,7 +85,7 @@
     </div>
 
     <div>
-        <h2 class="font-display font-semibold text-lg lg:text-xl mb-3" style="color: var(--ink);">BHW Overview</h2>
+        <h2 class="font-display font-semibold text-lg lg:text-xl mb-3" style="color: var(--ink);">Overview</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div class="p-4 rounded-xl border transition-[transform,box-shadow] duration-200 hover:scale-[1.01] hover:shadow-md"
                  style="background: var(--bg-surface); border-color: var(--border); box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary);">
