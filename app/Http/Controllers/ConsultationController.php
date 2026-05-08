@@ -214,7 +214,7 @@ class ConsultationController extends Controller
         }
 
         $consultation = DB::table('consultations')
-            ->leftJoin('health_workers', 'consultations.health_worker_id', '=', 'health_workers.id')
+            ->leftJoin('health_workers', 'consultations.worker_id', '=', 'health_workers.id')
             ->where('consultations.id', $id)
             ->select(
                 'consultations.*',

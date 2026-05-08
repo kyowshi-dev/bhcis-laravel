@@ -11,6 +11,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -383,14 +384,14 @@
                 </div>
             </header>
 
-            <main class="flex-1 px-2 lg:px-2 py-2 lg:py-2 overflow-auto">
+            <main class="flex-1 px-2 lg:px-2 pt-3 pb-2 lg:pt-3 lg:pb-2 overflow-auto">
                 <div class="max-w-5xl mx-auto">
                     
                     @php
                         $breadcrumbs = \App\Helpers\BreadcrumbHelper::getBreadcrumbs();
                     @endphp
                     @if(count($breadcrumbs) > 1)
-                        <nav class="flex items-center gap-2 mb-3 animate-in opacity-0 delay-1 ml-5 -mt-3" aria-label="Breadcrumb">
+                        <nav class="flex items-center gap-2 mb-2 py-1 animate-in opacity-0 delay-1 ml-5" aria-label="Breadcrumb">
                             @foreach($breadcrumbs as $index => $crumb)
                                 @if($index > 0)
                                     <svg class="w-4 h-4 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -433,6 +434,21 @@
         .nav-link.router-link-active { background: var(--teal-soft); color: var(--primary) !important; }
         a[href="{{ request()->url() }}"].nav-submenu,
         .nav-submenu.router-link-active { background: var(--teal-soft); color: var(--primary) !important; }
+
+        .app-sidebar .nav-link:hover,
+        .app-sidebar .nav-submenu:hover {
+            background: rgba(255, 255, 255, 0.16) !important;
+            color: #ffffff !important;
+        }
+
+        .app-sidebar a[href="{{ request()->url() }}"].nav-link,
+        .app-sidebar .nav-link.router-link-active,
+        .app-sidebar a[href="{{ request()->url() }}"].nav-submenu,
+        .app-sidebar .nav-submenu.router-link-active {
+            background: rgba(255, 255, 255, 0.24) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
     </style>
     <script>
         document.querySelectorAll('.nav-link, .nav-submenu').forEach(function(link) {
