@@ -14,6 +14,37 @@
         </a>
     </div>
 
+    <div class="rounded-xl" x-data="patientSearch()">
+        <div class="relative">
+            <span class="absolute inset-y-0 flex items-center pointer-events-none" style="color: var(--ink-subtle); left: calc(0.75rem);">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+            <input type="text" x-model="query" @input.debounce.300ms="search()"
+                   placeholder="Search patient"
+                   class="w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition"
+                   style="border-color: var(--border); color: var(--ink); --tw-ring-color: var(--primary);"
+                   autocomplete="off">
+        </div>
+        <div x-show="results.length > 0" class="mt-3 rounded-lg border overflow-hidden" style="display: none; border-color: var(--border); background: var(--bg-surface-elevated); box-shadow: var(--shadow-md);">
+            <ul>
+                <template x-for="patient in results" :key="patient.id">
+                    <li class="border-b last:border-0 transition-colors hover:bg-black/[0.03]">
+                        <a :href="patientUrl(patient.id)" class="block px-4 py-2.5">
+                            <div class="font-medium text-sm" style="color: var(--ink);" x-text="patient.text"></div>
+                            <div class="text-xs mt-0.5" style="color: var(--ink-muted);">
+                                <span x-text="patient.subtext"></span>
+                                <span class="font-semibold" style="color: var(--primary);"> - View immunizations</span>
+                            </div>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+        <div x-show="query.length > 1 && results.length === 0 && !loading" class="mt-2 text-xs" style="display: none; color: var(--ink-muted);">
+            No patient found. <a href="{{ url('/patients/create') }}" class="font-semibold" style="color: var(--primary);">Register a new patient</a>.
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="rounded-xl border p-4 lg:p-5" style="background: var(--bg-surface); border-color: var(--border);">
             <p class="text-xs font-medium mb-0.5" style="color: var(--ink-muted);">Total doses given</p>
@@ -63,4 +94,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    function patientSearch() {
+        return {
+            patientRouteTemplate: @json(route('immunizations.patient', ['id' => '__PATIENT_ID__'])),
+            query: '',
+            results: [],
+            loading: false,
+            patientUrl(patientId) {
+                return this.patientRouteTemplate.replace('__PATIENT_ID__', patientId);
+            },
+            async search() {
+                if (this.query.length < 2) { this.results = []; return; }
+                this.loading = true;
+                try {
+                    const response = await fetch(`/search/patients?query=${this.query}`);
+                    this.results = await response.json();
+                } catch (e) { console.error('Search failed:', e); }
+                this.loading = false;
+            },
+        };
+    }
+</script>
 @endsection
