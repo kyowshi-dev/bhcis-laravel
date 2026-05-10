@@ -140,8 +140,10 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-3 lg:px-4 py-6 text-center text-sm" style="color: var(--ink-muted);">
-                                    No patients due today yet. Use the search box to open a patient and record a dose.
+                                <td colspan="5" class="px-3 lg:px-4 py-12 text-center">
+                                    <div class="flex justify-center mb-3"><i class="fa-solid fa-syringe text-3xl" style="color: var(--ink-subtle);"></i></div>
+                                    <p class="text-sm font-medium" style="color: var(--ink);">No patients due today</p>
+                                    <p class="text-xs mt-1" style="color: var(--ink-muted);">Use the search box above to find a patient and record a vaccination dose</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -194,7 +196,11 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-3 lg:px-4 py-6 text-center text-sm" style="color: var(--ink-muted);">No immunization records yet. Use the search box to open a patient and record a dose.</td>
+                                <td colspan="7" class="px-3 lg:px-4 py-12 text-center">
+                                    <div class="flex justify-center mb-3"><i class="fa-solid fa-clock-rotate-left text-3xl" style="color: var(--ink-subtle);"></i></div>
+                                    <p class="text-sm font-medium" style="color: var(--ink);">No recent records</p>
+                                    <p class="text-xs mt-1" style="color: var(--ink-muted);">Immunization records will appear here once you start recording doses</p>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

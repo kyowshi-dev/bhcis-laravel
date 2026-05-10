@@ -49,7 +49,9 @@
             <div class="lg:col-span-6 min-w-0">
                 <label for="query" class="block text-xs font-medium mb-1" style="color: var(--ink-muted);">Search patient or diagnosis</label>
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-3 flex items-center" style="color: var(--ink-subtle);">🔍</span>
+                    <span class="absolute inset-y-0 left-3 flex items-center" style="color: var(--ink-subtle);">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    </span>
                     <input type="text" id="query" name="query" value="{{ request('query') }}"
                            placeholder="Search by patient, ID, or diagnosis..."
                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition"
@@ -152,7 +154,12 @@
                 </div>
             </div>
         @empty
-            <div class="rounded-xl border p-6 lg:p-8 text-center text-sm" style="background: var(--bg-surface); border-color: var(--border); color: var(--ink-muted);">No consultations match your criteria.</div>
+            <div class="rounded-xl border p-8 lg:p-12 text-center" style="background: var(--bg-surface); border-color: var(--border);">
+                <div class="flex justify-center mb-4"><i class="fa-solid fa-circle-notch text-4xl" style="color: var(--ink-subtle);"></i></div>
+                <p class="text-lg font-semibold" style="color: var(--ink);">No consultations found</p>
+                <p class="text-sm mt-2 mb-4" style="color: var(--ink-muted);">No consultations match your search and filter criteria. Try adjusting your filters or check back later.</p>
+                <a href="{{ route('consultations.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition hover:opacity-90" style="background: var(--primary);"><i class="fa-solid fa-arrow-rotate-left"></i> Reset filters</a>
+            </div>
         @endforelse
     </div>
     @if (method_exists($consultations, 'links'))

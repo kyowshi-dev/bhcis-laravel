@@ -241,8 +241,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-5 text-center text-sm" style="color: var(--ink-muted);">
-                                No households found.
+                            <td colspan="7" class="px-4 py-12 text-center">
+                                <div class="flex justify-center mb-3"><i class="fa-solid fa-house text-3xl" style="color: var(--ink-subtle);"></i></div>
+                                <p class="text-sm font-medium" style="color: var(--ink);">No households found</p>
+                                <p class="text-xs mt-1 mb-3" style="color: var(--ink-muted);">Start by registering a household to map your barangay population</p>
+                                <a href="{{ route('patients.create') }}" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-white transition hover:opacity-90" style="background: var(--primary);"><i class="fa-solid fa-plus"></i> Add household</a>
                             </td>
                         </tr>
                     @endforelse
