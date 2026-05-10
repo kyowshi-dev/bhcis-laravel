@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         // 2. Attempt to Log In
         // specific 'remember' logic handles the checkbox
-        $remember = $request->has('remember');
+        $remember = $request->boolean('remember');
 
         if (Auth::attempt([
             'username' => $credentials['username'],
