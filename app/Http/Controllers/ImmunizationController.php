@@ -14,6 +14,12 @@ class ImmunizationController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        $today = Carbon::today()->toDateString();
+
+        $latestRecordPerPatient = DB::table('immunization_records')
+            ->select('patient_id', DB::raw('MAX(date_given) as latest_date_given'))
+            ->groupBy('patient_id');
+
         $recentRecords = DB::table('immunization_records')
             ->join('patients', 'immunization_records.patient_id', '=', 'patients.id')
             ->join('vaccines_lookup', 'immunization_records.vaccine_id', '=', 'vaccines_lookup.id')
@@ -23,6 +29,7 @@ class ImmunizationController extends Controller
                 'immunization_records.patient_id',
                 'immunization_records.date_given',
                 'immunization_records.dose_number',
+                'immunization_records.next_due_date',
                 'patients.first_name',
                 'patients.last_name',
                 'vaccines_lookup.vaccine_name',
@@ -32,11 +39,64 @@ class ImmunizationController extends Controller
             ->limit(20)
             ->get();
 
+        $dueQueue = DB::table('immunization_records as ir')
+            ->joinSub($latestRecordPerPatient, 'lr', function ($join) {
+                $join->on('ir.patient_id', '=', 'lr.patient_id')
+                    ->on('ir.date_given', '=', 'lr.latest_date_given');
+            })
+            ->join('patients', 'ir.patient_id', '=', 'patients.id')
+            ->join('vaccines_lookup', 'ir.vaccine_id', '=', 'vaccines_lookup.id')
+            ->select(
+                'patients.id as patient_id',
+                'patients.first_name',
+                'patients.last_name',
+                'ir.next_due_date',
+                'vaccines_lookup.vaccine_name',
+                'ir.dose_number'
+            )
+            ->whereNotNull('ir.next_due_date')
+            ->orderBy('ir.next_due_date')
+            ->orderBy('patients.last_name');
+
+        $dueTodayPatients = (clone $dueQueue)
+            ->where('ir.next_due_date', '=', $today)
+            ->limit(50)
+            ->get();
+
+        $overdueCount = (clone $dueQueue)
+            ->where('ir.next_due_date', '<', $today)
+            ->distinct('patients.id')
+            ->count('patients.id');
+
+        $dueTodayCount = (clone $dueQueue)
+            ->where('ir.next_due_date', '=', $today)
+            ->distinct('patients.id')
+            ->count('patients.id');
+
+        $infantCutoff = Carbon::today()->subYear()->toDateString();
+        $infantTotal = DB::table('patients')
+            ->where('date_of_birth', '>=', $infantCutoff)
+            ->count();
+        $infantWithAnyDose = DB::table('immunization_records')
+            ->join('patients', 'immunization_records.patient_id', '=', 'patients.id')
+            ->where('patients.date_of_birth', '>=', $infantCutoff)
+            ->distinct('immunization_records.patient_id')
+            ->count('immunization_records.patient_id');
+
+        $infantCoveragePercent = $infantTotal > 0
+            ? (int) round(($infantWithAnyDose / $infantTotal) * 100)
+            : null;
+
         $totalGiven = DB::table('immunization_records')->count();
         $patientsWithRecords = DB::table('immunization_records')->distinct('patient_id')->count('patient_id');
 
         return view('immunizations.index', [
             'recentRecords' => $recentRecords,
+            'dueTodayPatients' => $dueTodayPatients,
+            'dueTodayCount' => $dueTodayCount,
+            'overdueCount' => $overdueCount,
+            'infantCoveragePercent' => $infantCoveragePercent,
+            'infantTotal' => $infantTotal,
             'totalGiven' => $totalGiven,
             'patientsWithRecords' => $patientsWithRecords,
         ]);
