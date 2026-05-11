@@ -142,7 +142,7 @@ class PatientController extends Controller
             // Auto-Capitalize Names
             'first_name' => ucwords(strtolower($validated['first_name'])),
             'last_name' => ucwords(strtolower($validated['last_name'])),
-            'middle_name' => $validated['middle_name'] ? ucwords(strtolower($validated['middle_name'])) : null,
+            'middle_name' => $validated['middle_name'] ? ucfirst(strtolower($validated['middle_name'])) : null,
 
             'suffix' => $validated['suffix'],
             'sex' => $validated['sex'],

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // --- PUBLIC ROUTES (No login required) ---
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'processLogin'])
     ->middleware('throttle:5,1')  // 5 attempts per minute
     ->name('login.process');
